@@ -1,0 +1,52 @@
+{
+  "navigation": {
+    "home": "Home",
+    "login": "Login",
+    "register": "Register",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "home": {
+    "title": "Welcome to the Full-Stack Starter",
+    "subtitle": "A modern template for building powerful web applications",
+    "getStarted": "Get Started",
+    "welcomeBack": "Welcome back, {username}!",
+    "exploreFeatures": "Explore Features"
+  },
+  "features": {
+    "title": "Key Features",
+    "backend": {
+      "title": "Django Backend",
+      "description": "Powerful Python framework with a secure REST API for your application data."
+    },
+    "frontend": {
+      "title": "Vue 3 Frontend",
+      "description": "Modern reactive framework with TypeScript for type-safe, maintainable code."
+    },
+    "styling": {
+      "title": "Tailwind CSS",
+      "description": "Utility-first CSS framework for rapid UI development with beautiful designs."
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Full-Stack Starter Template"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account? Register"
+    },
+    "register": {
+      "title": "Create an Account",
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Register",
+      "haveAccount": "Already have an account? Login"
+    }
+  }
+} 

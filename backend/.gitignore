@@ -1,0 +1,62 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments (not stored here, but just in case)
+venv/
+env/
+.venv/
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+static/
+*.mo
+
+# Django migrations
+**/migrations/
+!**/migrations/__init__.py
+
+# Local settings
+.env
+.env.*
+*.env
+settings_local.py
+settings_dev.py
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Testing
+.coverage
+htmlcov/
+coverage.xml
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# pytest
+.pytest_cache/
+
+# pip-tools
+*.txt~
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Other tools
+*.bak
+*.swp
+.idea/

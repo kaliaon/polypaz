@@ -1,0 +1,4 @@
+This is monorepository of full stack project
+Backend is in the backend folder, which uses python django
+Frontend is in the frontend folder, which uses Vite, Vue3 and Tailwind
+
