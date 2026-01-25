@@ -3,9 +3,9 @@
  * Central configuration for API endpoints and settings
  */
 
-// Default to localhost for development
-// This should be overridden by environment variables in production
-export const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8000';
+// Hardcoded for local network development
+// TODO: Set up proper environment variable loading
+export const API_BASE_URL = 'http://192.168.0.140:8000';
 
 export const API_ENDPOINTS = {
   // Auth endpoints

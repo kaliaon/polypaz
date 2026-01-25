@@ -195,6 +195,7 @@ class RoadmapGenerateView(APIView):
 
     def post(self, request):
         from utils.gemini_service import gemini_service
+        from .task_utils import generate_tasks_for_module
 
         serializer = RoadmapGenerateSerializer(data=request.data)
         if not serializer.is_valid():
@@ -242,7 +243,7 @@ class RoadmapGenerateView(APIView):
 
             # Create modules from roadmap data
             for index, module_data in enumerate(roadmap_data['modules']):
-                Module.objects.create(
+                module = Module.objects.create(
                     roadmap=roadmap,
                     title=module_data['title'],
                     description=module_data['description'],
@@ -253,6 +254,9 @@ class RoadmapGenerateView(APIView):
                         'min_tasks_completed': 10
                     })
                 )
+                
+                # Generate tasks for the newly created module
+                generate_tasks_for_module(module, use_ai=use_ai)
 
         # Return created roadmap
         serializer = RoadmapSerializer(roadmap)
@@ -566,29 +570,54 @@ class RoadmapModulesView(generics.ListAPIView):
 class ModuleTasksView(generics.ListAPIView):
     """
     GET /api/modules/{id}/tasks/
-    List tasks for a specific module
+    List tasks for a specific module (as instances for the user)
     """
-    serializer_class = TaskTemplateSerializer
+    serializer_class = TaskInstanceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         module_id = self.kwargs.get('pk')
         # Verify module belongs to user's roadmap
         module = get_object_or_404(Module, pk=module_id, roadmap__user=self.request.user)
-        return TaskTemplate.objects.filter(module=module).order_by('order')
+        templates = TaskTemplate.objects.filter(module=module).order_by('order')
+        
+        # Ensure instances exist for all templates
+        instances = []
+        for template in templates:
+            instance, created = TaskInstance.objects.get_or_create(
+                user=self.request.user,
+                template=template,
+                defaults={'status': 'pending'}
+            )
+            instances.append(instance)
+            
+        return instances
 
 
 class TaskDetailView(generics.RetrieveAPIView):
     """
-    GET /api/tasks/{id}/
-    Get specific task details
+    GET /api/tasks/{id}/ (template ID)
+    Get specific task details as an instance for the user
     """
-    serializer_class = TaskTemplateDetailSerializer
+    serializer_class = TaskInstanceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        # Only return tasks from modules in user's roadmaps
-        return TaskTemplate.objects.filter(module__roadmap__user=self.request.user)
+    def get_object(self):
+        template_id = self.kwargs.get('pk')
+        # Get template and verify access
+        template = get_object_or_404(
+            TaskTemplate, 
+            pk=template_id, 
+            module__roadmap__user=self.request.user
+        )
+        
+        # Find or create instance
+        instance, created = TaskInstance.objects.get_or_create(
+            user=self.request.user,
+            template=template,
+            defaults={'status': 'pending'}
+        )
+        return instance
 
 
 class TaskAttemptView(APIView):
@@ -656,9 +685,12 @@ class TaskAttemptView(APIView):
             # Update progress snapshot
             self._update_progress_snapshot(request.user, task_template.module)
 
-        # Return response
+        # Return response wrapped in expected structure
         attempt_serializer = TaskAttemptSerializer(attempt)
-        return Response(attempt_serializer.data, status=status.HTTP_201_CREATED)
+        return Response({
+            'attempt': attempt_serializer.data,
+            'task_status': task_instance.status
+        }, status=status.HTTP_201_CREATED)
 
     def _evaluate_answer(self, user_answer: str, correct_answer: str, task_type: str) -> bool:
         """
@@ -731,7 +763,9 @@ class TaskAttemptView(APIView):
                     feedback['rule'] = ai_feedback.get('rule', feedback['rule'])
                     feedback['example_contrast'] = ai_feedback.get('example_contrast', feedback['example_contrast'])
                     if 'tip' in ai_feedback:
-                        feedback['tip'] = ai_feedback['tip']
+                        feedback['explanation'] = ai_feedback['tip']
+                    elif 'explanation' in ai_feedback:
+                        feedback['explanation'] = ai_feedback['explanation']
             except Exception as e:
                 logger.error(f"Error generating AI feedback: {str(e)}")
 
@@ -953,11 +987,122 @@ class ProgressOverviewView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        # TODO: Implement in Phase 3.6
-        return Response(
-            {"message": "Progress overview endpoint - to be implemented in Phase 3.6"},
-            status=status.HTTP_501_NOT_IMPLEMENTED
+        user = request.user
+
+        # Get active roadmap (most recent if multiple exist)
+        try:
+            roadmap = Roadmap.objects.filter(user=user, is_active=True).order_by('-created_at').first()
+            if not roadmap:
+                raise Roadmap.DoesNotExist
+        except Roadmap.DoesNotExist:
+            return Response(
+                {"detail": "No active roadmap found. Please take a placement test first."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Get all modules in roadmap
+        modules = roadmap.modules.all()
+
+        # Get progress snapshots for all modules
+        progress_snapshots = ProgressSnapshot.objects.filter(
+            user=user,
+            module__in=modules
+        ).select_related('module')
+
+        # Calculate overall statistics
+        total_modules = modules.count()
+
+        # Count completed modules (where tasks_completed == total tasks in module)
+        completed_modules = 0
+        for module in modules:
+            total_module_tasks = module.tasks.count()
+            if total_module_tasks > 0:
+                try:
+                    snapshot = progress_snapshots.get(module=module)
+                    if snapshot.tasks_completed >= total_module_tasks:
+                        completed_modules += 1
+                except ProgressSnapshot.DoesNotExist:
+                    pass
+
+        # Calculate total tasks
+        from django.db.models import Sum, Avg, Count
+        total_tasks_qs = TaskTemplate.objects.filter(module__in=modules).aggregate(
+            total=Count('id')
         )
+        total_tasks = total_tasks_qs['total'] or 0
+
+        # Calculate completed tasks across all modules
+        completed_tasks = 0
+        total_accuracy = []
+
+        for snapshot in progress_snapshots:
+            completed_tasks += snapshot.tasks_completed
+            if snapshot.accuracy_percentage > 0:
+                total_accuracy.append(snapshot.accuracy_percentage)
+
+        # Calculate average accuracy
+        avg_accuracy = sum(total_accuracy) / len(total_accuracy) if total_accuracy else 0
+
+        # Get gamification profile
+        gamification_profile, _ = GamificationProfile.objects.get_or_create(user=user)
+
+        # Module progress details
+        module_progress = []
+        for module in modules:
+            total_module_tasks = module.tasks.count()
+            try:
+                snapshot = progress_snapshots.get(module=module)
+                is_completed = snapshot.tasks_completed >= total_module_tasks if total_module_tasks > 0 else False
+                progress_data = {
+                    'module_id': module.id,
+                    'module_title': module.title,
+                    'order': module.order,
+                    'tasks_total': total_module_tasks,
+                    'tasks_completed': snapshot.tasks_completed,
+                    'accuracy_percentage': float(snapshot.accuracy_percentage),
+                    'completed': is_completed,
+                    'last_activity_date': snapshot.last_activity_date
+                }
+            except ProgressSnapshot.DoesNotExist:
+                # Module not started yet
+                progress_data = {
+                    'module_id': module.id,
+                    'module_title': module.title,
+                    'order': module.order,
+                    'tasks_total': total_module_tasks,
+                    'tasks_completed': 0,
+                    'accuracy_percentage': 0.0,
+                    'completed': False,
+                    'last_activity_date': None
+                }
+
+            module_progress.append(progress_data)
+
+        # Sort by order
+        module_progress.sort(key=lambda x: x['order'])
+
+        return Response({
+            'roadmap': {
+                'id': roadmap.id,
+                'language': roadmap.language,
+                'cefr_level': roadmap.cefr_level,
+                'created_at': roadmap.created_at
+            },
+            'overall_progress': {
+                'total_modules': total_modules,
+                'completed_modules': completed_modules,
+                'total_tasks': total_tasks,
+                'completed_tasks': completed_tasks,
+                'average_accuracy': round(avg_accuracy, 1)
+            },
+            'gamification': {
+                'total_xp': gamification_profile.total_xp,
+                'current_streak': gamification_profile.current_streak_days,
+                'longest_streak': gamification_profile.longest_streak_days,
+                'last_active_date': gamification_profile.last_activity_date
+            },
+            'modules': module_progress
+        })
 
 
 class ModuleProgressView(generics.RetrieveAPIView):
@@ -993,8 +1138,54 @@ class DailyCheckInView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        # TODO: Implement in Phase 3.6
-        return Response(
-            {"message": "Daily check-in endpoint - to be implemented in Phase 3.6"},
-            status=status.HTTP_501_NOT_IMPLEMENTED
-        )
+        from datetime import date, timedelta
+
+        user = request.user
+        profile, created = GamificationProfile.objects.get_or_create(user=user)
+
+        today = date.today()
+        last_active = profile.last_activity_date
+
+        # Check if already checked in today
+        if last_active == today:
+            return Response({
+                'message': 'Already checked in today',
+                'current_streak': profile.current_streak_days,
+                'longest_streak': profile.longest_streak_days,
+                'total_xp': profile.total_xp,
+                'last_active_date': profile.last_activity_date
+            })
+
+        # Update streak logic
+        if last_active is None:
+            # First check-in ever
+            profile.current_streak_days = 1
+        elif last_active == today - timedelta(days=1):
+            # Consecutive day - increment streak
+            profile.current_streak_days += 1
+        else:
+            # Streak broken - reset to 1
+            profile.current_streak_days = 1
+
+        # Update longest streak if current is greater
+        if profile.current_streak_days > profile.longest_streak_days:
+            profile.longest_streak_days = profile.current_streak_days
+
+        # Update last active date
+        profile.last_activity_date = today
+
+        # Optional: Award bonus XP for check-in
+        check_in_xp = 5  # Small bonus for daily check-in
+        profile.total_xp += check_in_xp
+
+        profile.save()
+
+        return Response({
+            'message': 'Daily check-in successful',
+            'xp_awarded': check_in_xp,
+            'current_streak': profile.current_streak_days,
+            'longest_streak': profile.longest_streak_days,
+            'total_xp': profile.total_xp,
+            'last_active_date': profile.last_activity_date,
+            'streak_status': 'continued' if profile.current_streak_days > 1 else 'started'
+        }, status=status.HTTP_200_OK)

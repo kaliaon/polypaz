@@ -4,9 +4,9 @@
  */
 
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL, API_TIMEOUT } from '../config/api.config';
 import { ApiError, ApiResponse } from '../types';
+import storageService from './storage.service';
 
 class ApiService {
   private axiosInstance: AxiosInstance;
@@ -25,7 +25,19 @@ class ApiService {
     // Request interceptor to add auth token
     this.axiosInstance.interceptors.request.use(
       async (config) => {
-        if (this.accessToken) {
+        // public endpoints that should not have the Authorization header
+        const publicEndpoints = [
+            '/api/auth/login/', 
+            '/api/auth/register/',
+            '/api/auth/login', 
+            '/api/auth/register'
+        ];
+        
+        const isPublicEndpoint = publicEndpoints.some(endpoint => 
+            config.url?.includes(endpoint)
+        );
+
+        if (this.accessToken && !isPublicEndpoint) {
           config.headers.Authorization = `Bearer ${this.accessToken}`;
         }
         return config;
@@ -67,12 +79,12 @@ class ApiService {
   }
 
   /**
-   * Load tokens from AsyncStorage
+   * Load tokens from secure storage
    */
   private async loadTokens(): Promise<void> {
     try {
-      const access = await AsyncStorage.getItem('access_token');
-      const refresh = await AsyncStorage.getItem('refresh_token');
+      const access = await storageService.getSecure('access_token');
+      const refresh = await storageService.getSecure('refresh_token');
       this.accessToken = access;
       this.refreshToken = refresh;
     } catch (error) {
@@ -81,28 +93,28 @@ class ApiService {
   }
 
   /**
-   * Save tokens to AsyncStorage
+   * Save tokens to secure storage
    */
   async setTokens(access: string, refresh: string): Promise<void> {
     try {
       this.accessToken = access;
       this.refreshToken = refresh;
-      await AsyncStorage.setItem('access_token', access);
-      await AsyncStorage.setItem('refresh_token', refresh);
+      await storageService.setSecure('access_token', access);
+      await storageService.setSecure('refresh_token', refresh);
     } catch (error) {
       console.error('Error saving tokens:', error);
     }
   }
 
   /**
-   * Clear tokens from memory and storage
+   * Clear tokens from memory and secure storage
    */
   async clearTokens(): Promise<void> {
     try {
       this.accessToken = null;
       this.refreshToken = null;
-      await AsyncStorage.removeItem('access_token');
-      await AsyncStorage.removeItem('refresh_token');
+      await storageService.remove('access_token');
+      await storageService.remove('refresh_token');
     } catch (error) {
       console.error('Error clearing tokens:', error);
     }
@@ -123,7 +135,7 @@ class ApiService {
 
       const newAccessToken = response.data.access;
       this.accessToken = newAccessToken;
-      await AsyncStorage.setItem('access_token', newAccessToken);
+      await storageService.setSecure('access_token', newAccessToken);
 
       return newAccessToken;
     } catch (error) {

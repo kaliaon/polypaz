@@ -259,121 +259,133 @@ This document breaks down Stage 1 (Super MVP) into actionable implementation ste
 - [x] Add fuzzy matching for translations (80% similarity)
 - [x] Create seed data with 16 sample tasks
 
-### Step 3.5: Dialogue Mode API
-**Endpoints to create:**
-- [ ] `GET /api/dialogue/scenarios/` - List available scenarios
-- [ ] `POST /api/dialogue/sessions/start/` - Start dialogue session
-- [ ] `POST /api/dialogue/sessions/{id}/message/` - Send user message
-- [ ] `GET /api/dialogue/sessions/{id}/` - Get session history
-- [ ] `POST /api/dialogue/sessions/{id}/end/` - End session
+### Step 3.5: Dialogue Mode API ✅
+**Endpoints created:**
+- [x] `GET /api/dialogue/scenarios/` - List available scenarios
+- [x] `POST /api/dialogue/sessions/start/` - Start dialogue session
+- [x] `POST /api/dialogue/sessions/{id}/message/` - Send user message
+- [x] `GET /api/dialogue/sessions/{id}/` - Get session history
+- [x] `POST /api/dialogue/sessions/{id}/end/` - End session
 
 **Gemini Integration:**
-- [ ] Create dialogue system prompt with scenario context
-- [ ] Implement inline correction detection
-- [ ] Add reformulation generation
-- [ ] Enforce 10-turn limit
+- [x] Create dialogue system prompt with scenario context
+- [x] Implement inline correction detection
+- [x] Add reformulation generation
+- [x] Enforce 10-turn limit
+- [x] Create seed data with 9 dialogue scenarios (5 English, 4 Kazakh)
+- [x] AI fallback implemented for reliability
 
-### Step 3.6: Progress & Statistics API
-**Endpoints to create:**
-- [ ] `GET /api/progress/overview/` - Get overall progress summary
-- [ ] `GET /api/progress/modules/{id}/` - Get module-specific progress
-- [ ] `GET /api/gamification/profile/` - Get XP and streak data
-- [ ] `POST /api/gamification/daily-check-in/` - Record daily activity
+### Step 3.6: Progress & Statistics API ✅
+**Endpoints created:**
+- [x] `GET /api/progress/overview/` - Get overall progress summary
+- [x] `GET /api/progress/modules/{id}/` - Get module-specific progress
+- [x] `GET /api/gamification/profile/` - Get XP and streak data
+- [x] `POST /api/gamification/daily-check-in/` - Record daily activity
 
 **Business Logic:**
-- [ ] Calculate accuracy percentages
-- [ ] Update progress snapshots after each task
-- [ ] Manage daily streak logic
-- [ ] Award XP based on task completion
+- [x] Calculate accuracy percentages across modules
+- [x] Update progress snapshots after each task (implemented in Phase 3.4)
+- [x] Manage daily streak logic (consecutive days, reset on miss)
+- [x] Award XP based on task completion (base_xp × difficulty_level)
+- [x] Award bonus XP (5 XP) for daily check-ins
+- [x] Track longest streak achievement
 
 ---
 
 ## Phase 4: Frontend Development (React Native)
 
-### Step 4.1: Core Services Setup
-- [ ] Create API client service (axios/fetch wrapper)
-- [ ] Implement authentication service with token management
-- [ ] Create secure storage for tokens (AsyncStorage + encryption)
-- [ ] Set up global state management (Context API/Redux/Zustand)
-- [ ] Implement error handling and toast notifications
+### Step 4.1: Core Services Setup ✅
+- [x] Create API client service (axios/fetch wrapper)
+- [x] Implement authentication service with token management
+- [x] Create secure storage for tokens (AsyncStorage + encryption)
+- [x] Set up global state management (Context API)
+- [x] Implement error handling and toast notifications
+- [x] Create additional learning feature services (placement, roadmap, task, dialogue, progress)
 
-### Step 4.2: Authentication Screens
-- [ ] Login screen with email/password
-- [ ] Registration screen
-- [ ] Password validation
-- [ ] Error handling and loading states
-- [ ] Token persistence on successful login
+### Step 4.2: Authentication Screens ✅
+- [x] Login screen with username/password
+- [x] Registration screen with full validation
+- [x] Password validation (show/hide, strength checks)
+- [x] Error handling and loading states
+- [x] Token persistence on successful login
+- [x] Welcome screen with app introduction
+- [x] Navigation integration with auth context
 
-### Step 4.3: Onboarding Flow
-- [ ] Welcome screen explaining the app
-- [ ] Language selection screen (target language)
-- [ ] Native language selection
-- [ ] Learning preferences screen (optional)
-- [ ] Navigate to placement test
+### Step 4.3: Onboarding Flow ✅
+- [x] Target language selection screen with visual cards
+- [x] Native language selection screen
+- [x] Learning preferences screen (goals, daily time)
+- [x] Skip option for preferences
+- [x] Profile update API integration
+- [x] Onboarding completion logic
+- [x] Navigation flow integration
+- [x] Auto-redirect to main app after completion
 
-### Step 4.4: Placement Test Screens
-- [ ] Test introduction screen (explanation)
-- [ ] Question display component (supports all 3 types):
-  - Multiple choice renderer
-  - Cloze/fill-in-the-blank renderer
-  - Translation input renderer
-- [ ] Progress indicator (X of 12 questions)
-- [ ] Navigation (Next/Previous buttons)
-- [ ] Test submission confirmation
-- [ ] Results screen with CEFR level
+### Step 4.4: Placement Test Screens ✅
+- [x] Test introduction screen (explanation)
+- [x] Question display components (supports all 3 types):
+  - [x] Multiple choice renderer with radio buttons
+  - [x] Fill-in-the-blank/cloze renderer with text input
+  - [x] Translation input renderer with multiline input
+- [x] Progress indicator component (X of Y questions with percentage)
+- [x] Navigation (Next/Previous buttons)
+- [x] Test submission confirmation with unanswered warning
+- [x] Results screen with CEFR level and score
+- [x] Integration with placement test API
+- [x] Roadmap generation from results
 
 ### Step 4.5: Roadmap Display
-- [ ] Roadmap overview screen showing all modules
-- [ ] Module card component with:
+- [x] Roadmap overview screen showing all modules
+- [x] Module card component with:
   - Title and description
   - Progress indicator
   - Completion status
   - Lock/unlock state
-- [ ] Module detail screen showing objectives
-- [ ] Navigation to tasks
+- [x] Module detail screen showing objectives
+- [x] Navigation to tasks
 
 ### Step 4.6: Task/Exercise Screens
-- [ ] Task list screen (per module)
-- [ ] Task detail screen with question display
-- [ ] Answer input components (by task type)
-- [ ] Submit button with validation
-- [ ] Feedback display screen showing:
+- [x] Task list screen (per module)
+- [x] Task detail screen with question display
+- [x] Answer input components (by task type)
+- [x] Submit button with validation
+- [x] Feedback display screen showing:
   - Correctness indicator
   - Rule explanation
   - Example contrast
   - XP gained
-- [ ] Continue button to next task
+- [x] Continue button to next task
 
 ### Step 4.7: Dialogue Mode Screens
-- [ ] Scenario selection screen
-- [ ] Scenario introduction screen
-- [ ] Chat interface:
+- [x] Scenario selection screen
+- [x] Scenario introduction screen
+- [x] Chat interface:
   - Message input field
   - Send button
   - Message history display
   - Turn counter (X/10)
-- [ ] Correction display (inline highlighting)
-- [ ] Reformulation display
-- [ ] Session completion screen
+- [x] Correction display (inline highlighting)
+- [x] Reformulation display
+- [x] Session completion screen
 
 ### Step 4.8: Progress Dashboard
-- [ ] Statistics overview screen:
+- [x] Statistics overview screen:
   - Total XP
   - Current streak
   - Modules completed
   - Overall accuracy
-- [ ] Module-wise progress breakdown
-- [ ] Last activity display
-- [ ] XP history visualization (simple chart)
+- [x] Module-wise progress breakdown
+- [x] Last activity display
+- [x] XP history visualization (simple chart)
 
 ### Step 4.9: Navigation & Layout
-- [ ] Bottom tab navigation with:
+- [x] Bottom tab navigation with:
   - Home/Roadmap tab
   - Practice/Tasks tab
   - Dialogue tab
   - Progress tab
-- [ ] Header with user profile access
-- [ ] Drawer/menu with logout option
+- [x] Header with user profile access
+- [x] Drawer/menu with logout option
 
 ---
 

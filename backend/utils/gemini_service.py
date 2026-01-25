@@ -286,6 +286,71 @@ Return as JSON:
             cache_timeout=3600,
         )
 
+    def generate_tasks(
+        self,
+        module_title: str,
+        module_description: str,
+        language: str,
+        cefr_level: str,
+        count: int = 5
+    ) -> Optional[List[Dict]]:
+        """
+        Generate learning tasks/exercises for a specific module
+
+        Args:
+            module_title: Title of the module
+            module_description: Description of the module
+            language: Target language
+            cefr_level: CEFR level
+            count: Number of tasks to generate
+
+        Returns:
+            List of task dicts or None if error
+        }}
+        """
+        system_instruction = (
+            "You are an expert language teacher. Create engaging, level-appropriate "
+            "exercises for language learners. Follow the requested JSON format strictly."
+        )
+
+        prompt = f"""
+Create {count} learning exercises for the module "{module_title}".
+Module context: {module_description}
+Target language: {language}
+CEFR level: {cefr_level}
+
+Types of exercises to include (mix them):
+- multiple_choice: Question with 4 options
+- fill_blank: Question with a blank and a hint
+- translation: Translate a phrase from the learner's native language to {language}
+
+For each exercise, provide:
+- task_type: one of [multiple_choice, fill_blank, translation]
+- content: 
+    - for multiple_choice: {{"question": "...", "options": ["...", "...", "...", "..."]}}
+    - for fill_blank: {{"question": "...", "hint": "..."}}
+    - for translation: {{"question": "Translate: 'phrase in English'", "context": "..."}}
+- correct_answer: The exact correct answer string
+- rule_explanation: 1-2 sentences explaining the grammar/vocabulary rule
+- example_contrast: Correct vs Incorrect example
+- difficulty_level: 1 (easy), 2 (medium), or 3 (hard)
+
+Return as a JSON object with a "tasks" key containing the list of exercises.
+"""
+
+        schema = {
+            'required': ['tasks'],
+        }
+
+        result = self.generate_json(
+            prompt,
+            system_instruction=system_instruction,
+            schema=schema,
+            cache_timeout=86400,
+        )
+
+        return result.get('tasks') if result else None
+
     def generate_dialogue_response(
         self,
         scenario_context: str,

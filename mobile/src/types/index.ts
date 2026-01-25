@@ -11,16 +11,26 @@ export type CEFRLevel = 'A0' | 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 // Task types
 export type TaskType = 'multiple_choice' | 'fill_blank' | 'translation';
 
+// Profile data
+export interface ProfileData {
+  target_language?: Language;
+  native_language?: Language;
+  current_cefr_level?: CEFRLevel;
+  learning_preferences?: {
+    goals?: string[];
+    daily_time_minutes?: number;
+    onboarding_completed?: boolean;
+  };
+  created_at?: string;
+  updated_at?: string;
+}
+
 // User Profile
 export interface UserProfile {
   id: number;
   username: string;
   email: string;
-  target_language: Language;
-  native_language: Language;
-  current_cefr_level: CEFRLevel;
-  created_at: string;
-  updated_at: string;
+  profile?: ProfileData;
 }
 
 // Auth types
@@ -33,7 +43,7 @@ export interface RegisterData {
   username: string;
   email: string;
   password: string;
-  password_confirm: string;
+  password2: string;
 }
 
 export interface AuthTokens {
@@ -45,7 +55,7 @@ export interface AuthTokens {
 export interface PlacementTestItem {
   id: number;
   item_type: TaskType;
-  question_text: string;
+  question_text: string | Record<string, string>;
   options?: string[];
   correct_answer: string;
   order: number;
@@ -61,6 +71,7 @@ export interface PlacementTest {
 export interface PlacementTestResult {
   id: number;
   score: number;
+  max_score: number;
   estimated_cefr_level: CEFRLevel;
   completed_at: string;
 }
@@ -73,6 +84,7 @@ export interface Module {
   objectives: string[];
   order: number;
   is_completed: boolean;
+  checkpoint_criteria?: string;
 }
 
 export interface Roadmap {

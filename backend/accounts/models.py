@@ -37,6 +37,8 @@ class UserProfile(models.Model):
     target_language = models.CharField(
         max_length=20,
         choices=LANGUAGE_CHOICES,
+        blank=True,
+        null=True,
         help_text="Language the user wants to learn"
     )
 

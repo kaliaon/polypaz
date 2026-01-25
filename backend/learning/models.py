@@ -478,7 +478,7 @@ class TaskAttempt(models.Model):
         if self.is_correct:
             instance.best_attempt_correct = True
             instance.status = 'completed'
-        else:
+        elif instance.status != 'completed':
             instance.status = 'in_progress'
 
         instance.save()

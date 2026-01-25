@@ -67,22 +67,20 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # CORS middleware
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # CSRF disabled for JWT-only API - not needed for token-based auth
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS settings
-CORS_ALLOWED_ORIGINS = env.list(
-    'CORS_ALLOWED_ORIGINS',
-    default=[
-        'http://localhost:19006',  # Expo default
-        'http://localhost:19000',  # Expo alternative
-        'http://localhost:8081',   # React Native Metro
-    ]
-)
+# CORS settings - Allow all origins in development
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF settings - Exempt API endpoints from CSRF (using JWT authentication)
+CSRF_TRUSTED_ORIGINS = ['http://192.168.0.140:8000', 'http://localhost:8000']
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -181,7 +179,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # SessionAuthentication disabled - using JWT only
+        # 'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',

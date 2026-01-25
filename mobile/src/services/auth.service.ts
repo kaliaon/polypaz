@@ -70,6 +70,15 @@ class AuthService {
   }
 
   /**
+   * Update user profile
+   */
+  async updateProfile(profileData: any): Promise<ApiResponse<UserProfile>> {
+    return apiService.put<UserProfile>(API_ENDPOINTS.AUTH.PROFILE, {
+      profile: profileData
+    });
+  }
+
+  /**
    * Check if user is authenticated
    */
   isAuthenticated(): boolean {
