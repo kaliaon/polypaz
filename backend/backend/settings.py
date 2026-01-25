@@ -79,7 +79,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF settings - Exempt API endpoints from CSRF (using JWT authentication)
-CSRF_TRUSTED_ORIGINS = ['http://192.168.0.140:8000', 'http://localhost:8000']
+CSRF_TRUSTED_ORIGINS = ['http://192.168.0.140:8000', 'http://localhost:8000', 'https://polypaz.onrender.com']
 CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
 
 ROOT_URLCONF = 'backend.urls'
