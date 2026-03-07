@@ -1,139 +1,120 @@
-# Full-Stack Starter Template
+# Polypaz
 
-This is a starter template for full-stack web applications, featuring a Django backend and a Vue 3 frontend with Tailwind CSS.
+A mobile learning app with a Django REST backend and a React Native (Expo) mobile frontend.
 
 ## Prerequisites
 
-- **Python**: 3.10 or higher
-- **Node.js**: 18.x or higher
-- **npm**: 9.x or higher
-- **Git**: Latest stable version recommended
+- [Python 3.10+](https://www.python.org/downloads/)
+- [Node.js 18+](https://nodejs.org/)
+- [PostgreSQL 16](https://www.postgresql.org/download/) or [Docker](https://docs.docker.com/get-docker/)
+- [Expo Go](https://expo.dev/go) app on your phone
 
 ## Project Structure
 
 ```
-starter/
-├── backend/             # Django backend
-│   ├── backend/         # Django project settings
-│   ├── venv/            # Python virtual environment
-│   └── manage.py        # Django management script
-├── frontend/            # Vue 3 frontend
-│   ├── src/             # Vue source files
-│   ├── public/          # Static assets
-│   └── package.json     # Node.js dependencies
-├── start.sh             # Startup script for Unix-like systems
-└── start.bat            # Startup script for Windows
+polypaz/
+├── backend/          # Django REST API
+│   ├── accounts/     # User authentication
+│   ├── learning/     # Learning module
+│   └── manage.py
+└── mobile/           # React Native (Expo) app
+    └── src/
 ```
 
-## Getting Started
+## Setup
 
-### Installation
+### 1. Backend
 
-1. Clone this repository:
+```bash
+cd backend
+```
 
-   ```
-   git clone <repository-url>
-   cd starter
-   ```
+Create and activate a virtual environment:
 
-2. **Backend Setup**:
+```bash
+# Linux / macOS
+python3 -m venv venv
+source venv/bin/activate
 
-   ```
-   cd backend
-   python -m venv venv
-   ```
+# Windows
+python -m venv venv
+venv\Scripts\activate
+```
 
-   - On Windows:
+Install dependencies:
 
-     ```
-     venv\Scripts\activate
-     ```
+```bash
+pip install -r requirements.txt
+```
 
-   - On macOS/Linux:
-     ```
-     source venv/bin/activate
-     ```
+#### Database (PostgreSQL)
 
-   Then install dependencies:
+Option A — using Docker:
 
-   ```
-   pip install -r requirements.txt
-   python manage.py migrate
-   ```
+```bash
+docker compose up -d
+```
 
-3. **Frontend Setup**:
-   ```
-   cd frontend
-   npm install
-   ```
+Option B — use a local PostgreSQL instance and create a database called `polypaz_db`.
 
-### Running the Application
+#### Environment variables
 
-#### Using the Start Scripts
+```bash
+cp .env.example .env
+```
 
-- **On Windows**:
+Edit `.env` and fill in your values:
 
-  ```
-  start.bat
-  ```
+| Variable | Description |
+|---|---|
+| `SECRET_KEY` | Django secret key |
+| `DB_PASSWORD` | PostgreSQL password (`postgres` if using docker-compose) |
+| `GEMINI_API_KEY` | Google Gemini API key (for AI features) |
+| `ALLOWED_HOSTS` | Add your local IP if accessing from a phone |
 
-- **On macOS/Linux**:
-  ```
-  chmod +x start.sh  # Make the script executable (first time only)
-  ./start.sh
-  ```
+Run migrations and start the server:
 
-#### Manual Start
+```bash
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
+```
 
-1. **Start the Backend**:
+> Use `0.0.0.0:8000` so the API is accessible from your phone on the same network.
 
-   ```
-   cd backend
-   source venv/bin/activate  # or venv\Scripts\activate on Windows
-   python manage.py runserver
-   ```
+### 2. Mobile
 
-2. **Start the Frontend** (in a separate terminal):
-   ```
-   cd frontend
-   npm run dev
-   ```
+```bash
+cd mobile
+npm install
+```
 
-The application will be available at:
+#### Environment variables
 
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000
+```bash
+cp .env.example .env
+```
 
-## Features
+Set `API_BASE_URL` to your machine's local IP:
 
-- Django backend with REST API capabilities
-- Vue 3 frontend with TypeScript
-- Tailwind CSS for styling
-- Modern development setup with hot reloading
+```
+API_BASE_URL=http://192.168.x.x:8000
+```
 
-## Development
+> Find your IP: `ip addr` (Linux) / `ipconfig` (Windows) / `ifconfig` (macOS). Your phone and computer must be on the same Wi-Fi network.
 
-### Backend
+Start the Expo dev server:
 
-- Create Django apps in the `backend` directory
-- Run migrations with `python manage.py makemigrations` followed by `python manage.py migrate`
+```bash
+npx expo start
+```
 
-### Frontend
+Scan the QR code with the Expo Go app on your phone.
 
-- Component-based architecture with Vue 3
-- Tailwind CSS for utility-first styling
-- TypeScript for type safety
+## Quick Reference
 
-## Deployment
-
-This starter is configured for development. For production deployment:
-
-1. Set `DEBUG = False` in Django settings
-2. Configure proper environment variables for secrets
-3. Build the Vue frontend with `npm run build`
-4. Serve the Django application with a production WSGI server like Gunicorn
-5. Set up a reverse proxy like Nginx
-
-## License
-
-[MIT License](LICENSE)
+| Command | Description |
+|---|---|
+| `python manage.py runserver 0.0.0.0:8000` | Start backend |
+| `npx expo start` | Start mobile app |
+| `python manage.py makemigrations && python manage.py migrate` | Apply DB changes |
+| `docker compose up -d` | Start PostgreSQL via Docker |
