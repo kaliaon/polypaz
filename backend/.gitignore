@@ -22,8 +22,7 @@ static/
 *.mo
 
 # Django migrations
-**/migrations/
-!**/migrations/__init__.py
+# (Migration files should be committed to version control)
 
 # Local settings
 .env
