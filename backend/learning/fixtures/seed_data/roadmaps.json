@@ -1,0 +1,112 @@
+{
+  "template_user": {
+    "username": "template_bot",
+    "email": "template@polypaz.com"
+  },
+  "roadmaps": [
+    {
+      "language": "english",
+      "cefr_level": "A1",
+      "generated_by_ai": false,
+      "is_active": false,
+      "modules": [
+        {
+          "title": "Basics & Greetings",
+          "description": "Learn to say hello and introduce yourself.",
+          "objectives": ["Say hello/goodbye", "Introduce yourself", "Ask \"How are you?\""],
+          "order": 1
+        },
+        {
+          "title": "Family & Friends",
+          "description": "Talk about your family members and friends.",
+          "objectives": ["Family member names", "Possessive adjectives", "Describing people"],
+          "order": 2
+        },
+        {
+          "title": "Daily Routine",
+          "description": "Describe your everyday activities.",
+          "objectives": ["Times of day", "Common verbs", "Present simple tense"],
+          "order": 3
+        }
+      ]
+    },
+    {
+      "language": "kazakh",
+      "cefr_level": "A1",
+      "generated_by_ai": false,
+      "is_active": false,
+      "modules": [
+        {
+          "title": "Basics & Greetings",
+          "description": "Learn to say hello and introduce yourself in Kazakh.",
+          "objectives": ["Greetings (Сәлем, Сәлеметсіз бе)", "Self-introduction", "Polite expressions"],
+          "order": 1
+        },
+        {
+          "title": "Family & Friends",
+          "description": "Talk about your family members and friends in Kazakh.",
+          "objectives": ["Family member names", "Possessive suffixes", "Describing people"],
+          "order": 2
+        },
+        {
+          "title": "Daily Routine",
+          "description": "Describe your everyday activities in Kazakh.",
+          "objectives": ["Times of day", "Common verbs", "Present tense conjugation"],
+          "order": 3
+        }
+      ]
+    },
+    {
+      "language": "russian",
+      "cefr_level": "A1",
+      "generated_by_ai": false,
+      "is_active": false,
+      "modules": [
+        {
+          "title": "Basics & Greetings",
+          "description": "Learn to say hello and introduce yourself in Russian.",
+          "objectives": ["Greetings (Привет, Здравствуйте)", "Self-introduction", "Polite expressions"],
+          "order": 1
+        },
+        {
+          "title": "Family & Friends",
+          "description": "Talk about your family members and friends in Russian.",
+          "objectives": ["Family member names", "Possessive pronouns", "Adjective agreement"],
+          "order": 2
+        },
+        {
+          "title": "Daily Routine",
+          "description": "Describe your everyday activities in Russian.",
+          "objectives": ["Times of day", "Common verbs", "Present tense conjugation"],
+          "order": 3
+        }
+      ]
+    },
+    {
+      "language": "spanish",
+      "cefr_level": "A1",
+      "generated_by_ai": false,
+      "is_active": false,
+      "modules": [
+        {
+          "title": "Basics & Greetings",
+          "description": "Learn to say hello and introduce yourself in Spanish.",
+          "objectives": ["Greetings (Hola, Buenos días)", "Self-introduction", "Polite expressions"],
+          "order": 1
+        },
+        {
+          "title": "Family & Friends",
+          "description": "Talk about your family members and friends in Spanish.",
+          "objectives": ["Family member names", "Possessive adjectives", "Gender and number agreement"],
+          "order": 2
+        },
+        {
+          "title": "Daily Routine",
+          "description": "Describe your everyday activities in Spanish.",
+          "objectives": ["Times of day", "Common verbs", "Present tense conjugation (-ar, -er, -ir)"],
+          "order": 3
+        }
+      ]
+    }
+  ]
+}

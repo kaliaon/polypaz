@@ -241,3 +241,4 @@ else:
 
 # Gemini API Configuration
 GEMINI_API_KEY = env('GEMINI_API_KEY', default='')
+USE_AI_FOR_ROADMAPS = env.bool('USE_AI_FOR_ROADMAPS', default=False)

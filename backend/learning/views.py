@@ -194,6 +194,7 @@ class RoadmapGenerateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
+        from django.conf import settings as django_settings
         from utils.gemini_service import gemini_service
         from .task_utils import generate_tasks_for_module
 
@@ -203,7 +204,7 @@ class RoadmapGenerateView(APIView):
 
         language = serializer.validated_data['language']
         cefr_level = serializer.validated_data['cefr_level']
-        use_ai = serializer.validated_data.get('use_ai', True)
+        use_ai = serializer.validated_data.get('use_ai', True) and django_settings.USE_AI_FOR_ROADMAPS
 
         # Try to generate roadmap with AI
         roadmap_data = None
@@ -264,271 +265,52 @@ class RoadmapGenerateView(APIView):
 
     def _get_fallback_roadmap(self, language: str, cefr_level: str) -> Dict:
         """
-        Get static fallback roadmap template
+        Clone roadmap structure from template_bot's seed data.
+        Tries exact language+level match first, then same language any level,
+        then any template at all. Logs a warning if nothing is seeded.
         """
-        # Static roadmap templates by language and level
-        fallback_templates = {
-            'english': {
-                'A0': {
-                    'modules': [
-                        {
-                            'title': 'Introduction to English Basics',
-                            'description': 'Learn the English alphabet, basic pronunciation, and simple greetings.',
-                            'objectives': [
-                                'Master the English alphabet and basic sounds',
-                                'Learn common greetings and introductions',
-                                'Understand basic pronouns (I, you, he, she)',
-                                'Form simple present tense sentences'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.80,
-                                'min_tasks_completed': 8
-                            }
-                        },
-                        {
-                            'title': 'Numbers and Everyday Vocabulary',
-                            'description': 'Learn numbers, colors, and common objects in daily life.',
-                            'objectives': [
-                                'Count from 1 to 100',
-                                'Name common colors and objects',
-                                'Tell the time (basic)',
-                                'Use basic adjectives to describe things'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        },
-                        {
-                            'title': 'Simple Conversations',
-                            'description': 'Practice basic conversational phrases and questions.',
-                            'objectives': [
-                                'Ask and answer "What is this?"',
-                                'Express likes and dislikes',
-                                'Form basic yes/no questions',
-                                'Use common courtesy phrases'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        }
-                    ]
-                },
-                'A1': {
-                    'modules': [
-                        {
-                            'title': 'Present Tense Mastery',
-                            'description': 'Master present simple and present continuous tenses.',
-                            'objectives': [
-                                'Use present simple for habits and facts',
-                                'Form present continuous for ongoing actions',
-                                'Understand the difference between the two tenses',
-                                'Use time expressions correctly'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 12
-                            }
-                        },
-                        {
-                            'title': 'Daily Routines and Activities',
-                            'description': 'Learn vocabulary and grammar for describing daily activities.',
-                            'objectives': [
-                                'Describe your daily routine',
-                                'Use frequency adverbs (always, sometimes, never)',
-                                'Talk about hobbies and interests',
-                                'Ask about others\' routines'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        },
-                        {
-                            'title': 'Places and Directions',
-                            'description': 'Learn to describe locations and give simple directions.',
-                            'objectives': [
-                                'Use prepositions of place (in, on, at, near)',
-                                'Name common places (shop, bank, school)',
-                                'Give and follow simple directions',
-                                'Use "there is/there are" structures'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        }
-                    ]
-                },
-                'B1': {
-                    'modules': [
-                        {
-                            'title': 'Past Tenses and Storytelling',
-                            'description': 'Master past simple and past continuous for narrating events.',
-                            'objectives': [
-                                'Use past simple for completed actions',
-                                'Form past continuous for background actions',
-                                'Tell stories about past experiences',
-                                'Use past time expressions correctly'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 12
-                            }
-                        },
-                        {
-                            'title': 'Making Plans and Future Forms',
-                            'description': 'Learn different ways to talk about the future.',
-                            'objectives': [
-                                'Use "will" for predictions and decisions',
-                                'Use "going to" for plans and intentions',
-                                'Form present continuous for arrangements',
-                                'Express probability and possibility'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        },
-                        {
-                            'title': 'Expressing Opinions and Preferences',
-                            'description': 'Learn to express and justify opinions clearly.',
-                            'objectives': [
-                                'State opinions using appropriate phrases',
-                                'Give reasons and examples',
-                                'Agree and disagree politely',
-                                'Compare and contrast ideas'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        }
-                    ]
-                }
-            },
-            'kazakh': {
-                'A0': {
-                    'modules': [
-                        {
-                            'title': 'Kazakh Alphabet and Pronunciation',
-                            'description': 'Learn the Kazakh alphabet, special characters, and basic pronunciation.',
-                            'objectives': [
-                                'Master the 42-letter Kazakh alphabet',
-                                'Pronounce special letters (ә, ғ, қ, ң, ө, ұ, ү, h, і)',
-                                'Learn basic greetings (Сәлеметсіз бе, Сәлем)',
-                                'Understand vowel harmony basics'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.80,
-                                'min_tasks_completed': 8
-                            }
-                        },
-                        {
-                            'title': 'Basic Grammar and Simple Sentences',
-                            'description': 'Learn basic sentence structure and common words.',
-                            'objectives': [
-                                'Form simple sentences with Subject-Object-Verb order',
-                                'Use personal pronouns (мен, сен, ол)',
-                                'Learn numbers 1-100',
-                                'Use basic question words (кім, не, қайда)'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        },
-                        {
-                            'title': 'Introduction and Daily Phrases',
-                            'description': 'Master essential phrases for daily interactions.',
-                            'objectives': [
-                                'Introduce yourself (Менің атым...)',
-                                'Ask basic questions (Сіздің атыңыз кім?)',
-                                'Express gratitude (Рахмет, Үлкен рахмет)',
-                                'Use polite forms and courtesy phrases'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        }
-                    ]
-                },
-                'A1': {
-                    'modules': [
-                        {
-                            'title': 'Kazakh Case System Basics',
-                            'description': 'Introduction to the Kazakh case system.',
-                            'objectives': [
-                                'Understand nominative case (basic form)',
-                                'Use accusative case for direct objects',
-                                'Learn dative-locative case (барамын мектепке)',
-                                'Practice ablative case (from)'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 12
-                            }
-                        },
-                        {
-                            'title': 'Possessive Forms and Family',
-                            'description': 'Learn possessive suffixes and family vocabulary.',
-                            'objectives': [
-                                'Use possessive endings (менің кітабым)',
-                                'Name family members',
-                                'Form possessive questions',
-                                'Describe family relationships'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        },
-                        {
-                            'title': 'Present Tense Verbs',
-                            'description': 'Master present tense verb conjugations.',
-                            'objectives': [
-                                'Conjugate verbs in present continuous (оқып жатырмын)',
-                                'Use simple present tense (оқимын)',
-                                'Form negative sentences',
-                                'Ask yes/no questions with verbs'
-                            ],
-                            'checkpoint_criteria': {
-                                'accuracy_threshold': 0.85,
-                                'min_tasks_completed': 10
-                            }
-                        }
-                    ]
-                }
-            }
-        }
+        base_qs = Roadmap.objects.filter(
+            user__username='template_bot',
+        ).prefetch_related('modules')
 
-        # Get template or return generic fallback
-        template = fallback_templates.get(language, {}).get(cefr_level, {
+        # Try: exact match → same language any level → any template
+        template_roadmap = (
+            base_qs.filter(language=language, cefr_level=cefr_level).first()
+            or base_qs.filter(language=language).first()
+            or base_qs.first()
+        )
+
+        if template_roadmap and template_roadmap.modules.exists():
+            return {
+                'modules': [
+                    {
+                        'title': m.title,
+                        'description': m.description,
+                        'objectives': m.objectives,
+                        'checkpoint_criteria': m.checkpoint_criteria or {
+                            'accuracy_threshold': 0.85,
+                            'min_tasks_completed': 10,
+                        },
+                    }
+                    for m in template_roadmap.modules.order_by('order')
+                ]
+            }
+
+        logger.warning(
+            f"No seed roadmap found for {language}/{cefr_level}. "
+            "Run 'manage.py seed_stage_1_data' to populate templates."
+        )
+        return {
             'modules': [
                 {
-                    'title': f'{language.title()} Module 1',
-                    'description': f'Introduction to {language.title()} at {cefr_level} level',
+                    'title': f'{language.title()} Module {i}',
+                    'description': f'{language.title()} at {cefr_level} level – module {i}',
                     'objectives': ['Learn basic vocabulary', 'Practice grammar', 'Improve comprehension'],
-                    'checkpoint_criteria': {'accuracy_threshold': 0.85, 'min_tasks_completed': 10}
-                },
-                {
-                    'title': f'{language.title()} Module 2',
-                    'description': f'Intermediate {language.title()} at {cefr_level} level',
-                    'objectives': ['Expand vocabulary', 'Master key grammar', 'Develop fluency'],
-                    'checkpoint_criteria': {'accuracy_threshold': 0.85, 'min_tasks_completed': 10}
-                },
-                {
-                    'title': f'{language.title()} Module 3',
-                    'description': f'Advanced {language.title()} at {cefr_level} level',
-                    'objectives': ['Apply knowledge', 'Practice conversation', 'Achieve proficiency'],
-                    'checkpoint_criteria': {'accuracy_threshold': 0.85, 'min_tasks_completed': 10}
+                    'checkpoint_criteria': {'accuracy_threshold': 0.85, 'min_tasks_completed': 10},
                 }
+                for i in range(1, 4)
             ]
-        })
-
-        return template
+        }
 
 
 class RoadmapCurrentView(APIView):
@@ -933,9 +715,9 @@ class DialogueMessageView(APIView):
                 session=session,
                 turn_number=session.turn_count + 1,
                 user_message=user_message,
-                ai_response=ai_data.get('ai_response', ''),
-                corrections=ai_data.get('corrections', []),
-                reformulation=ai_data.get('reformulation', '')
+                ai_response=ai_data.get('ai_response') or '',
+                corrections=ai_data.get('corrections') or [],
+                reformulation=ai_data.get('reformulation') or ''
             )
 
         # Return turn data

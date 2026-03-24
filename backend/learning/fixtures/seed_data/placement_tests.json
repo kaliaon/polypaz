@@ -1,0 +1,358 @@
+{
+  "english": {
+    "total_items": 12,
+    "items": [
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"text": "Select the correct greeting for the morning:"},
+        "correct_answer": "Good morning",
+        "options": ["Good night", "Good morning", "Goodbye", "See you"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"text": "I ___ a student."},
+        "correct_answer": "am",
+        "options": ["is", "are", "am", "be"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"text": "Which one is a fruit?"},
+        "correct_answer": "Apple",
+        "options": ["Car", "Apple", "Dog", "Table"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"text": "They ___ playing football now."},
+        "correct_answer": "are",
+        "options": ["is", "are", "am", "was"],
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"text": "Yesterday I ___ a movie."},
+        "correct_answer": "watched",
+        "options": ["watch", "watched", "watching", "watches"],
+        "difficulty_weight": 1.2
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"text": "If I ___ rich, I would buy a boat."},
+        "correct_answer": "were",
+        "options": ["am", "was", "were", "been"],
+        "difficulty_weight": 1.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"en": "She ___ to school every day.", "question": "Fill in the blank:"},
+        "correct_answer": "goes",
+        "options": ["go", "goes", "going", "gone"],
+        "difficulty_weight": 0.8
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"en": "The book ___ by millions of people.", "question": "Choose passive voice:"},
+        "correct_answer": "was read",
+        "options": ["read", "was read", "is reading", "reads"],
+        "difficulty_weight": 1.3
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"text": "She lives ___ London."},
+        "correct_answer": "in",
+        "options": null,
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"text": "He ___ to school every day."},
+        "correct_answer": "goes",
+        "options": null,
+        "difficulty_weight": 1.2
+      },
+      {
+        "item_type": "translation",
+        "question_text": {"text": "Translate \"Thank you\""},
+        "correct_answer": "Thank you",
+        "options": null,
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "translation",
+        "question_text": {"text": "Translate \"cat\""},
+        "correct_answer": "cat",
+        "options": null,
+        "difficulty_weight": 0.8
+      }
+    ]
+  },
+  "kazakh": {
+    "total_items": 12,
+    "items": [
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"kk": "Сәлеметсіз бе?", "question": "Choose the correct response:"},
+        "correct_answer": "сәлеметсіз бе",
+        "options": ["сәлеметсіз бе", "сәлем", "қош келдіңіз", "рахмет"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"kk": "Мен ___ барамын.", "question": "Fill in the blank (to school):"},
+        "correct_answer": "мектепке",
+        "options": ["мектеп", "мектепке", "мектепте", "мектептен"],
+        "difficulty_weight": 0.8
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"kk": "Choose the correct plural form of \"бала\" (child):"},
+        "correct_answer": "балалар",
+        "options": ["балалар", "балалер", "балақар", "балатар"],
+        "difficulty_weight": 0.9
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"kk": "Мен кітап ___", "question": "Choose correct form (I am reading):"},
+        "correct_answer": "оқып жатырмын",
+        "options": ["оқимын", "оқып жатырмын", "оқыдым", "оқығым келеді"],
+        "difficulty_weight": 1.1
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"kk": "Which is the correct possessive form? (his book)"},
+        "correct_answer": "оның кітабы",
+        "options": ["оның кітабы", "оның кітабым", "оның кітабың", "оның кітаптар"],
+        "difficulty_weight": 1.2
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"kk": "Choose the correct past tense form: (I went)"},
+        "correct_answer": "мен бардым",
+        "options": ["мен барамын", "мен бардым", "мен барғам келеді", "мен бара жатырмын"],
+        "difficulty_weight": 1.2
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"kk": "\"Ол кітап оқиды\" дегенде, кім оқиды?"},
+        "correct_answer": "Ол",
+        "options": ["Мен", "Ол", "Біз", "Сен"],
+        "difficulty_weight": 0.6
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"kk": "Бұл менің ___", "hint": "my book"},
+        "correct_answer": "кітабым",
+        "options": null,
+        "difficulty_weight": 0.7
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"kk": "Ол үйде ___", "hint": "at home (sitting)"},
+        "correct_answer": "отыр",
+        "options": null,
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"kk": "Біз ертең Астанаға ___", "hint": "we will go"},
+        "correct_answer": "барамыз",
+        "options": null,
+        "difficulty_weight": 1.3
+      },
+      {
+        "item_type": "translation",
+        "question_text": {"en": "Translate to Kazakh: \"Hello, how are you?\""},
+        "correct_answer": "сәлеметсіз бе, қалыңыз қалай",
+        "options": null,
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "translation",
+        "question_text": {"en": "Translate to Kazakh: \"Thank you very much\""},
+        "correct_answer": "рахмет сізге",
+        "options": null,
+        "difficulty_weight": 0.8
+      }
+    ]
+  },
+  "russian": {
+    "total_items": 12,
+    "items": [
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"ru": "Как правильно поздороваться?", "question": "Choose the correct greeting:"},
+        "correct_answer": "Здравствуйте",
+        "options": ["Здравствуйте", "До свидания", "Спасибо", "Пожалуйста"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"ru": "Я ___ студент.", "question": "Fill in the blank:"},
+        "correct_answer": "—",
+        "options": ["есть", "—", "быть", "являюсь"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"ru": "Она ___ в школу каждый день."},
+        "correct_answer": "ходит",
+        "options": ["ходит", "ходить", "хожу", "ходят"],
+        "difficulty_weight": 0.8
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"ru": "Вчера я ___ фильм."},
+        "correct_answer": "смотрел",
+        "options": ["смотрю", "смотрел", "смотреть", "буду смотреть"],
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"ru": "Какое из этих слов — фрукт?"},
+        "correct_answer": "Яблоко",
+        "options": ["Машина", "Яблоко", "Стол", "Собака"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"ru": "У меня ___ два брата."},
+        "correct_answer": "есть",
+        "options": ["есть", "быть", "имею", "был"],
+        "difficulty_weight": 0.9
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"ru": "Если бы я ___ богатым, я бы путешествовал."},
+        "correct_answer": "был",
+        "options": ["есть", "буду", "был", "быть"],
+        "difficulty_weight": 1.5
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"ru": "Она живёт ___ Москве.", "hint": "preposition"},
+        "correct_answer": "в",
+        "options": null,
+        "difficulty_weight": 0.8
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"ru": "Мы ___ в парк завтра.", "hint": "we will go"},
+        "correct_answer": "пойдём",
+        "options": null,
+        "difficulty_weight": 1.2
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"ru": "Дети ___ в саду.", "hint": "are playing"},
+        "correct_answer": "играют",
+        "options": null,
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "translation",
+        "question_text": {"en": "Translate to Russian: \"Good morning\""},
+        "correct_answer": "Доброе утро",
+        "options": null,
+        "difficulty_weight": 0.6
+      },
+      {
+        "item_type": "translation",
+        "question_text": {"en": "Translate to Russian: \"Where is the library?\""},
+        "correct_answer": "Где библиотека?",
+        "options": null,
+        "difficulty_weight": 1.0
+      }
+    ]
+  },
+  "spanish": {
+    "total_items": 12,
+    "items": [
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"es": "¿Cómo saludar por la mañana?", "question": "Choose the correct greeting:"},
+        "correct_answer": "Buenos días",
+        "options": ["Buenas noches", "Buenos días", "Adiós", "Hasta luego"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"es": "Yo ___ estudiante."},
+        "correct_answer": "soy",
+        "options": ["es", "eres", "soy", "ser"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"es": "¿Cuál de estos es una fruta?"},
+        "correct_answer": "Manzana",
+        "options": ["Coche", "Manzana", "Perro", "Mesa"],
+        "difficulty_weight": 0.5
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"es": "Ella ___ a la escuela todos los días."},
+        "correct_answer": "va",
+        "options": ["ir", "va", "fue", "iba"],
+        "difficulty_weight": 0.8
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"es": "Ayer yo ___ una película."},
+        "correct_answer": "vi",
+        "options": ["veo", "vi", "veré", "viendo"],
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"es": "Ellos ___ jugando al fútbol ahora."},
+        "correct_answer": "están",
+        "options": ["es", "están", "soy", "estaba"],
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "multiple_choice",
+        "question_text": {"es": "Si yo ___ rico, compraría un barco."},
+        "correct_answer": "fuera",
+        "options": ["soy", "fui", "fuera", "sido"],
+        "difficulty_weight": 1.5
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"es": "Ella vive ___ Madrid.", "hint": "preposition"},
+        "correct_answer": "en",
+        "options": null,
+        "difficulty_weight": 0.8
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"es": "Nosotros ___ al cine mañana.", "hint": "we will go"},
+        "correct_answer": "iremos",
+        "options": null,
+        "difficulty_weight": 1.2
+      },
+      {
+        "item_type": "cloze",
+        "question_text": {"es": "Mi hermano ___ 20 años.", "hint": "age expression"},
+        "correct_answer": "tiene",
+        "options": null,
+        "difficulty_weight": 1.0
+      },
+      {
+        "item_type": "translation",
+        "question_text": {"en": "Translate to Spanish: \"Thank you very much\""},
+        "correct_answer": "Muchas gracias",
+        "options": null,
+        "difficulty_weight": 0.6
+      },
+      {
+        "item_type": "translation",
+        "question_text": {"en": "Translate to Spanish: \"Where is the train station?\""},
+        "correct_answer": "¿Dónde está la estación de tren?",
+        "options": null,
+        "difficulty_weight": 1.2
+      }
+    ]
+  }
+}

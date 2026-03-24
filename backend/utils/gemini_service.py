@@ -8,9 +8,11 @@ import logging
 from typing import Dict, Any, Optional, List
 from django.conf import settings
 from django.core.cache import cache
-import google.generativeai as genai
+from google import genai
 
 logger = logging.getLogger(__name__)
+
+MODEL_NAME = 'gemini-2.5-flash'
 
 
 class GeminiService:
@@ -22,11 +24,10 @@ class GeminiService:
         """Initialize Gemini service with API key"""
         self.api_key = settings.GEMINI_API_KEY
         if self.api_key:
-            genai.configure(api_key=self.api_key)
-            self.model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            self.client = genai.Client(api_key=self.api_key)
         else:
             logger.warning("Gemini API key not configured")
-            self.model = None
+            self.client = None
 
     def _get_cache_key(self, prompt: str, params: Optional[Dict] = None) -> str:
         """Generate cache key for a prompt"""
@@ -54,8 +55,8 @@ class GeminiService:
         Returns:
             Generated text or None if error
         """
-        if not self.model:
-            logger.error("Gemini model not initialized")
+        if not self.client:
+            logger.error("Gemini client not initialized")
             return None
 
         # Check cache first
@@ -67,17 +68,15 @@ class GeminiService:
                 return cached_response
 
         try:
-            # Configure model with system instruction if provided
+            config = {}
             if system_instruction:
-                model = genai.GenerativeModel(
-                    'gemini-2.0-flash-exp',
-                    system_instruction=system_instruction
-                )
-            else:
-                model = self.model
+                config['system_instruction'] = system_instruction
 
-            # Generate content
-            response = model.generate_content(prompt, **kwargs)
+            response = self.client.models.generate_content(
+                model=MODEL_NAME,
+                contents=prompt,
+                config=config if config else None,
+            )
 
             # Extract text from response
             result_text = response.text
@@ -306,7 +305,6 @@ Return as JSON:
 
         Returns:
             List of task dicts or None if error
-        }}
         """
         system_instruction = (
             "You are an expert language teacher. Create engaging, level-appropriate "
@@ -326,7 +324,7 @@ Types of exercises to include (mix them):
 
 For each exercise, provide:
 - task_type: one of [multiple_choice, fill_blank, translation]
-- content: 
+- content:
     - for multiple_choice: {{"question": "...", "options": ["...", "...", "...", "..."]}}
     - for fill_blank: {{"question": "...", "hint": "..."}}
     - for translation: {{"question": "Translate: 'phrase in English'", "context": "..."}}

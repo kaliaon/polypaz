@@ -209,7 +209,7 @@ class ApiService {
    */
   private handleError<T>(error: any): ApiResponse<T> {
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError;
+      const axiosError = error as AxiosError<any>;
       const apiError: ApiError = {
         message: axiosError.response?.data?.message || axiosError.message || 'An error occurred',
         errors: axiosError.response?.data?.errors,

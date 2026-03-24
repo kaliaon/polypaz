@@ -5,7 +5,8 @@
 
 // Hardcoded for local network development
 // TODO: Set up proper environment variable loading
-export const API_BASE_URL = 'http://192.168.0.140:8000';
+export const API_BASE_URL = 'https://polypaz.onrender.com'
+// export const API_BASE_URL = 'http://192.168.0.65:8000';
 
 export const API_ENDPOINTS = {
   // Auth endpoints

@@ -1,0 +1,53 @@
+{
+  "languages": ["english", "kazakh", "russian", "spanish"],
+  "scenarios": [
+    {
+      "title": "At a Café",
+      "context_description": "You are ordering a coffee and a croissant at a local café.",
+      "cefr_level": "A1",
+      "max_turns": 10
+    },
+    {
+      "title": "Meeting a New Friend",
+      "context_description": "You meet someone at a park and introduce yourself.",
+      "cefr_level": "A1",
+      "max_turns": 10
+    },
+    {
+      "title": "At the Grocery Store",
+      "context_description": "You are buying fruits, vegetables, and bread at a grocery store.",
+      "cefr_level": "A1",
+      "max_turns": 10
+    },
+    {
+      "title": "Asking for Directions",
+      "context_description": "You are lost in the city and need to find the train station.",
+      "cefr_level": "A2",
+      "max_turns": 10
+    },
+    {
+      "title": "At the Doctor's Office",
+      "context_description": "You have a headache and need to describe your symptoms to the doctor.",
+      "cefr_level": "A2",
+      "max_turns": 12
+    },
+    {
+      "title": "Booking a Hotel Room",
+      "context_description": "You are calling a hotel to book a room for two nights.",
+      "cefr_level": "A2",
+      "max_turns": 10
+    },
+    {
+      "title": "Job Interview",
+      "context_description": "You are answering basic questions about your experience and skills.",
+      "cefr_level": "B1",
+      "max_turns": 12
+    },
+    {
+      "title": "Making a Complaint",
+      "context_description": "You received a broken item and need to return it at the store.",
+      "cefr_level": "B1",
+      "max_turns": 10
+    }
+  ]
+}

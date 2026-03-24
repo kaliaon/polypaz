@@ -61,31 +61,56 @@ def generate_tasks_for_module(module: Module, use_ai: bool = True) -> int:
     return created_count
 
 def _get_fallback_tasks(module: Module) -> List[Dict]:
-    """Get static fallback tasks (simplified version of seed_tasks logic)"""
-    title = module.title.lower()
+    """
+    Clone tasks from the matching template_bot seed module.
+    Tries exact language+level match first, then same language any level,
+    then any template with the same module order.
+    """
+    from learning.models import Roadmap
+
     language = module.roadmap.language
-    
-    # Generic sample tasks if nothing matches
-    return [
-        {
-            'task_type': 'multiple_choice',
-            'content': {
-                'question': f'Sample question 1 for {module.title}',
-                'options': ['Option A', 'Option B', 'Option C', 'Option D']
-            },
-            'correct_answer': 'Option A',
-            'rule_explanation': 'This is a sample task.',
-            'example_contrast': 'Correct: A, Incorrect: B',
-            'difficulty_level': 1
-        },
-        {
-            'task_type': 'fill_blank',
-            'content': {
-                'question': f'The ___ is blue.',
-                'hint': 'Something high above'
-            },
-            'correct_answer': 'sky',
-            'rule_explanation': 'Vocabulary check.',
-            'difficulty_level': 1
-        }
-    ]
+    cefr_level = module.roadmap.cefr_level
+
+    base_qs = Roadmap.objects.filter(user__username='template_bot')
+
+    template_roadmap = (
+        base_qs.filter(language=language, cefr_level=cefr_level).first()
+        or base_qs.filter(language=language).first()
+        or base_qs.first()
+    )
+
+    if template_roadmap:
+        template_module = Module.objects.filter(
+            roadmap=template_roadmap,
+            order=module.order,
+        ).first()
+        # If no module at this order, grab the first available one
+        if not template_module:
+            template_module = Module.objects.filter(
+                roadmap=template_roadmap,
+            ).order_by('order').first()
+
+        if template_module:
+            seed_tasks = TaskTemplate.objects.filter(
+                module=template_module
+            ).order_by('order')
+
+            if seed_tasks.exists():
+                return [
+                    {
+                        'task_type': t.task_type,
+                        'content': t.content,
+                        'correct_answer': t.correct_answer,
+                        'rule_explanation': t.rule_explanation,
+                        'example_contrast': t.example_contrast,
+                        'difficulty_level': t.difficulty_level,
+                    }
+                    for t in seed_tasks
+                ]
+
+    logger.warning(
+        f"No seed tasks for module {module.id} "
+        f"({language}/{cefr_level}, order={module.order}). "
+        "Run 'manage.py seed_stage_1_data' to populate templates."
+    )
+    return []

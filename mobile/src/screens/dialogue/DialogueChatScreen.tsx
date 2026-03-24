@@ -107,11 +107,11 @@ export const DialogueChatScreen: React.FC<DialogueChatScreenProps> = ({
 
     try {
       const response = await dialogueService.sendMessage(session.id, {
-        user_message: userMessage,
+        message: userMessage,
       });
 
       if (response.success && response.data) {
-        const newTurn = response.data.turn;
+        const newTurn = response.data;
         setMessages((prev) => [...prev, newTurn]);
 
         // Check if session is completed

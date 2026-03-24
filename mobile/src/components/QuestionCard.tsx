@@ -19,14 +19,18 @@ interface MultipleChoiceQuestionProps {
   onAnswerSelect: (answer: string) => void;
 }
 
+const extractQuestionText = (qt: string | Record<string, string>): string => {
+  if (typeof qt === 'string') return qt;
+  // Try common keys, then fall back to first available value
+  return qt.question || qt.text || qt.en || qt.kk || qt.ru || qt.es || Object.values(qt)[0] || '';
+};
+
 export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
   item,
   selectedAnswer,
   onAnswerSelect,
 }) => {
-  const questionText = typeof item.question_text === 'string' 
-    ? item.question_text 
-    : item.question_text.en || item.question_text.kk || item.question_text.question || '';
+  const questionText = extractQuestionText(item.question_text);
 
   return (
     <View style={styles.container}>
@@ -79,9 +83,7 @@ export const FillBlankQuestion: React.FC<FillBlankQuestionProps> = ({
   answer,
   onAnswerChange,
 }) => {
-  const questionText = typeof item.question_text === 'string' 
-    ? item.question_text 
-    : item.question_text.en || item.question_text.kk || item.question_text.question || '';
+  const questionText = extractQuestionText(item.question_text);
 
   return (
     <View style={styles.container}>
@@ -111,9 +113,7 @@ export const TranslationQuestion: React.FC<TranslationQuestionProps> = ({
   answer,
   onAnswerChange,
 }) => {
-  const questionText = typeof item.question_text === 'string' 
-    ? item.question_text 
-    : item.question_text.en || item.question_text.kk || item.question_text.question || '';
+  const questionText = extractQuestionText(item.question_text);
 
   return (
     <View style={styles.container}>

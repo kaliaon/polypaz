@@ -12,12 +12,7 @@ interface StartSessionParams {
 }
 
 interface SendMessageParams {
-  user_message: string;
-}
-
-interface MessageResponse {
-  turn: DialogueTurn;
-  session_status: string;
+  message: string;
 }
 
 class DialogueService {
@@ -48,8 +43,8 @@ class DialogueService {
   async sendMessage(
     sessionId: number,
     params: SendMessageParams
-  ): Promise<ApiResponse<MessageResponse>> {
-    return apiService.post<MessageResponse>(API_ENDPOINTS.DIALOGUE.MESSAGE(sessionId), params);
+  ): Promise<ApiResponse<DialogueTurn>> {
+    return apiService.post<DialogueTurn>(API_ENDPOINTS.DIALOGUE.MESSAGE(sessionId), params);
   }
 
   /**

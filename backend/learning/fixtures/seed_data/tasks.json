@@ -1,0 +1,535 @@
+{
+  "_doc": "Tasks keyed by '{language}/{module_order}'. Each array contains TaskTemplate data for that module.",
+
+  "english/1": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "How do you greet someone in the morning?", "options": ["Good night", "Good morning", "Goodbye", "See you later"]},
+      "correct_answer": "Good morning",
+      "rule_explanation": "\"Good morning\" is used as a greeting before noon.",
+      "example_contrast": "\"Good night\" is used when saying goodbye at night, not as a greeting.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "My name ___ John."},
+      "correct_answer": "is",
+      "rule_explanation": "Verb 'to be' — 3rd person singular uses 'is'.",
+      "example_contrast": "'am' is for 'I', 'are' is for 'you/we/they'.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Nice to ___ you.", "options": ["meet", "met", "meeting", "meat"]},
+      "correct_answer": "meet",
+      "rule_explanation": "Standard greeting phrase: 'Nice to meet you.'",
+      "example_contrast": "'met' is past tense, 'meat' is food.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate \"Hello, my name is Anna.\""},
+      "correct_answer": "Hello, my name is Anna.",
+      "rule_explanation": "Basic self-introduction pattern.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "How ___ you?"},
+      "correct_answer": "are",
+      "rule_explanation": "'How are you?' is a standard greeting phrase using 'are' with 'you'.",
+      "example_contrast": "'is' is used with he/she/it, not 'you'.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "What does 'Goodbye' mean?", "options": ["A greeting", "A farewell", "An apology", "A question"]},
+      "correct_answer": "A farewell",
+      "rule_explanation": "'Goodbye' is used when parting ways.",
+      "example_contrast": "'Hello' is a greeting, not a farewell.",
+      "difficulty_level": 1
+    }
+  ],
+  "english/2": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "My mother's brother is my ___.", "options": ["Uncle", "Aunt", "Cousin", "Father"]},
+      "correct_answer": "Uncle",
+      "rule_explanation": "Family vocabulary: mother's brother = uncle.",
+      "example_contrast": "Aunt is mother's sister.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "I ___ two sisters."},
+      "correct_answer": "have",
+      "rule_explanation": "Verb 'to have' — 'I have', 'he/she has'.",
+      "example_contrast": "'has' is for he/she/it.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "She is my ___. She has the same parents as me.", "options": ["Sister", "Cousin", "Aunt", "Friend"]},
+      "correct_answer": "Sister",
+      "rule_explanation": "A sister shares the same parents.",
+      "example_contrast": "A cousin shares grandparents, not parents.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate \"My father is tall.\""},
+      "correct_answer": "My father is tall.",
+      "rule_explanation": "Describing family members with adjectives.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "This is ___ book. (belonging to her)"},
+      "correct_answer": "her",
+      "rule_explanation": "Possessive adjectives: my, your, his, her, its, our, their.",
+      "example_contrast": "'his' is for male, 'her' is for female.",
+      "difficulty_level": 2
+    }
+  ],
+  "english/3": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "I ___ up at 7 AM.", "options": ["get", "got", "getting", "gets"]},
+      "correct_answer": "get",
+      "rule_explanation": "Present simple for routines with 'I'.",
+      "example_contrast": "'gets' is for he/she/it.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "She ___ breakfast at 8."},
+      "correct_answer": "eats",
+      "rule_explanation": "Third person singular adds '-s' in present simple.",
+      "example_contrast": "'eat' is for I/you/we/they.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "He ___ to work by bus.", "options": ["go", "goes", "going", "gone"]},
+      "correct_answer": "goes",
+      "rule_explanation": "Third person singular: he goes, she goes.",
+      "example_contrast": "'go' is used with I/you/we/they.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate \"I brush my teeth every morning.\""},
+      "correct_answer": "I brush my teeth every morning.",
+      "rule_explanation": "Daily routine vocabulary.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "We ___ dinner at 7 PM every day."},
+      "correct_answer": "have",
+      "rule_explanation": "'have dinner' is a fixed expression for the evening meal.",
+      "example_contrast": "'has' would be for he/she/it.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "What time do you ___ to bed?", "options": ["go", "goes", "going", "went"]},
+      "correct_answer": "go",
+      "rule_explanation": "After 'do you', use the base form of the verb.",
+      "example_contrast": "'goes' is for statements (He goes to bed at 10).",
+      "difficulty_level": 2
+    }
+  ],
+
+  "kazakh/1": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Қазақша сәлемдесудің дұрыс нұсқасын таңдаңыз:", "options": ["Сау болыңыз", "Сәлеметсіз бе", "Рахмет", "Кешіріңіз"]},
+      "correct_answer": "Сәлеметсіз бе",
+      "rule_explanation": "\"Сәлеметсіз бе\" — formal greeting in Kazakh.",
+      "example_contrast": "\"Сау болыңыз\" means goodbye.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Менің атым ___."},
+      "correct_answer": "Айдар",
+      "rule_explanation": "\"Менің атым ...\" — My name is ... Basic introduction pattern.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "\"Рахмет\" сөзінің мағынасы қандай?", "options": ["Hello", "Thank you", "Goodbye", "Sorry"]},
+      "correct_answer": "Thank you",
+      "rule_explanation": "\"Рахмет\" = Thank you.",
+      "example_contrast": "\"Кешіріңіз\" = Sorry/Excuse me.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Kazakh: \"Hello, how are you?\""},
+      "correct_answer": "Сәлеметсіз бе, қалыңыз қалай?",
+      "rule_explanation": "Formal greeting + asking how someone is.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Сіздің атыңыз ___?"},
+      "correct_answer": "кім",
+      "rule_explanation": "\"Сіздің атыңыз кім?\" — What is your name? (formal).",
+      "example_contrast": "\"Сенің атың кім?\" is the informal version.",
+      "difficulty_level": 1
+    }
+  ],
+  "kazakh/2": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "\"Ана\" сөзінің мағынасы:", "options": ["Father", "Mother", "Sister", "Brother"]},
+      "correct_answer": "Mother",
+      "rule_explanation": "\"Ана\" = Mother in Kazakh.",
+      "example_contrast": "\"Әке\" = Father.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Менің ___ бар. (I have a brother)"},
+      "correct_answer": "ағам",
+      "rule_explanation": "\"Аға\" = older brother. With possessive suffix: \"ағам\" (my older brother).",
+      "example_contrast": "\"Інім\" = my younger brother.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "\"Әпке\" дегеніміз кім?", "options": ["Older sister", "Younger sister", "Aunt", "Grandmother"]},
+      "correct_answer": "Older sister",
+      "rule_explanation": "\"Әпке\" = older sister, \"Сіңлі/Қарындас\" = younger sister.",
+      "example_contrast": "",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Kazakh: \"My father\""},
+      "correct_answer": "Менің әкем",
+      "rule_explanation": "Possessive: Менің + noun + possessive suffix.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    }
+  ],
+  "kazakh/3": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Мен таңертең сағат 7-де ___.", "options": ["тұрамын", "тұрады", "тұрасың", "тұрамыз"]},
+      "correct_answer": "тұрамын",
+      "rule_explanation": "\"Мен тұрамын\" — I get up. First person singular present tense.",
+      "example_contrast": "\"тұрады\" is for he/she (3rd person).",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Ол мектепке ___."},
+      "correct_answer": "барады",
+      "rule_explanation": "\"Ол барады\" — He/she goes. 3rd person present tense.",
+      "example_contrast": "\"барамын\" is for I (1st person).",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "\"Таңғы ас\" дегеніміз не?", "options": ["Lunch", "Breakfast", "Dinner", "Snack"]},
+      "correct_answer": "Breakfast",
+      "rule_explanation": "\"Таңғы ас\" = Breakfast (morning meal).",
+      "example_contrast": "\"Түскі ас\" = Lunch, \"Кешкі ас\" = Dinner.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate: \"I go to school every day.\""},
+      "correct_answer": "Мен күн сайын мектепке барамын.",
+      "rule_explanation": "\"Күн сайын\" = every day. Basic daily routine sentence.",
+      "example_contrast": "",
+      "difficulty_level": 2
+    }
+  ],
+
+  "russian/1": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Как правильно поздороваться?", "options": ["До свидания", "Здравствуйте", "Спасибо", "Извините"]},
+      "correct_answer": "Здравствуйте",
+      "rule_explanation": "\"Здравствуйте\" is a formal greeting in Russian.",
+      "example_contrast": "\"До свидания\" means goodbye.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Меня ___ Анна."},
+      "correct_answer": "зовут",
+      "rule_explanation": "\"Меня зовут ...\" — My name is ... (literally: they call me).",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Что значит \"Спасибо\"?", "options": ["Hello", "Thank you", "Goodbye", "Please"]},
+      "correct_answer": "Thank you",
+      "rule_explanation": "\"Спасибо\" = Thank you.",
+      "example_contrast": "\"Пожалуйста\" = Please / You're welcome.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Russian: \"Good morning!\""},
+      "correct_answer": "Доброе утро!",
+      "rule_explanation": "Morning greeting in Russian.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Как ___ дела?"},
+      "correct_answer": "ваши",
+      "rule_explanation": "\"Как ваши дела?\" — How are you? (formal).",
+      "example_contrast": "\"Как твои дела?\" is the informal version.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Очень приятно ___ познакомиться.", "options": ["с вами", "с тобой", "с ним", "с ней"]},
+      "correct_answer": "с вами",
+      "rule_explanation": "\"Приятно с вами познакомиться\" — Nice to meet you (formal).",
+      "example_contrast": "\"с тобой\" is the informal form.",
+      "difficulty_level": 1
+    }
+  ],
+  "russian/2": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Брат моей мамы — это мой ___.", "options": ["Дядя", "Тётя", "Двоюродный брат", "Дедушка"]},
+      "correct_answer": "Дядя",
+      "rule_explanation": "\"Дядя\" = uncle (mother's or father's brother).",
+      "example_contrast": "\"Тётя\" = aunt.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "У меня ___ две сестры."},
+      "correct_answer": "есть",
+      "rule_explanation": "\"У меня есть\" — I have. Possessive construction in Russian.",
+      "example_contrast": "",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "\"Бабушка\" — это...", "options": ["Grandmother", "Grandfather", "Mother", "Aunt"]},
+      "correct_answer": "Grandmother",
+      "rule_explanation": "\"Бабушка\" = grandmother, \"Дедушка\" = grandfather.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Russian: \"My father is kind.\""},
+      "correct_answer": "Мой отец добрый.",
+      "rule_explanation": "Describing family with adjectives. Masculine adjective: добрый.",
+      "example_contrast": "",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Это ___ книга. (her book)"},
+      "correct_answer": "её",
+      "rule_explanation": "Possessive pronouns: мой, твой, его, её, наш, ваш, их.",
+      "example_contrast": "\"его\" is for his, \"её\" is for her.",
+      "difficulty_level": 2
+    }
+  ],
+  "russian/3": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Я ___ в 7 утра.", "options": ["встаю", "встаёт", "встаёшь", "встаём"]},
+      "correct_answer": "встаю",
+      "rule_explanation": "\"Я встаю\" — I get up. 1st person singular present tense.",
+      "example_contrast": "\"встаёт\" is for he/she.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Она ___ завтрак в 8."},
+      "correct_answer": "ест",
+      "rule_explanation": "\"Она ест\" — She eats. Irregular verb 'есть' (to eat).",
+      "example_contrast": "\"ем\" is for I, \"ест\" is for he/she.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Он ___ на работу на автобусе.", "options": ["еду", "едет", "едешь", "едем"]},
+      "correct_answer": "едет",
+      "rule_explanation": "\"Он едет\" — He goes (by transport). 3rd person singular.",
+      "example_contrast": "\"еду\" is for I (1st person).",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Russian: \"I brush my teeth every morning.\""},
+      "correct_answer": "Я чищу зубы каждое утро.",
+      "rule_explanation": "Daily routine vocabulary.",
+      "example_contrast": "",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Мы ___ ужин в 7 вечера."},
+      "correct_answer": "едим",
+      "rule_explanation": "\"Мы едим\" — We eat. 1st person plural.",
+      "example_contrast": "",
+      "difficulty_level": 2
+    }
+  ],
+
+  "spanish/1": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "¿Cómo se dice 'Hello'?", "options": ["Hola", "Adiós", "Sí", "No"]},
+      "correct_answer": "Hola",
+      "rule_explanation": "\"Hola\" is the standard greeting in Spanish.",
+      "example_contrast": "\"Adiós\" means goodbye.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Mi nombre ___ Juan."},
+      "correct_answer": "es",
+      "rule_explanation": "Verb 'ser' — 3rd person singular: 'es'.",
+      "example_contrast": "'soy' is for 'yo' (I am).",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Mucho gusto en ___.", "options": ["conocerte", "conocer", "conocido", "conociendo"]},
+      "correct_answer": "conocerte",
+      "rule_explanation": "\"Mucho gusto en conocerte\" — Nice to meet you.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Spanish: \"Good morning\""},
+      "correct_answer": "Buenos días",
+      "rule_explanation": "Morning greeting. Used before noon.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "¿Cómo ___ usted?"},
+      "correct_answer": "está",
+      "rule_explanation": "\"¿Cómo está usted?\" — How are you? (formal).",
+      "example_contrast": "\"¿Cómo estás?\" is the informal version.",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Spanish: \"Goodbye\""},
+      "correct_answer": "Adiós",
+      "rule_explanation": "Standard farewell.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    }
+  ],
+  "spanish/2": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "El hermano de mi madre es mi ___.", "options": ["Tío", "Tía", "Primo", "Padre"]},
+      "correct_answer": "Tío",
+      "rule_explanation": "\"Tío\" = uncle.",
+      "example_contrast": "\"Tía\" = aunt.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Yo ___ dos hermanas."},
+      "correct_answer": "tengo",
+      "rule_explanation": "Verb 'tener' — 'yo tengo' (I have).",
+      "example_contrast": "'tiene' is for él/ella (he/she has).",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "\"Abuela\" significa...", "options": ["Grandmother", "Grandfather", "Mother", "Aunt"]},
+      "correct_answer": "Grandmother",
+      "rule_explanation": "\"Abuela\" = grandmother, \"Abuelo\" = grandfather.",
+      "example_contrast": "",
+      "difficulty_level": 1
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Spanish: \"My father is tall.\""},
+      "correct_answer": "Mi padre es alto.",
+      "rule_explanation": "Describing family. Masculine adjective: 'alto'.",
+      "example_contrast": "'alta' is the feminine form.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Este es ___ libro. (her book)"},
+      "correct_answer": "su",
+      "rule_explanation": "Possessive adjective 'su' works for his/her/your(formal).",
+      "example_contrast": "'mi' = my, 'tu' = your (informal).",
+      "difficulty_level": 2
+    }
+  ],
+  "spanish/3": [
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Yo me ___ a las 7.", "options": ["levanto", "levanta", "levantas", "levantamos"]},
+      "correct_answer": "levanto",
+      "rule_explanation": "Reflexive verb 'levantarse' — 'yo me levanto' (I get up).",
+      "example_contrast": "'se levanta' is for él/ella.",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Ella ___ el desayuno a las 8."},
+      "correct_answer": "come",
+      "rule_explanation": "'Ella come' — She eats. Verb 'comer', 3rd person singular.",
+      "example_contrast": "'como' is for 'yo' (I eat).",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "Él ___ al trabajo en autobús.", "options": ["ir", "va", "fue", "iba"]},
+      "correct_answer": "va",
+      "rule_explanation": "Verb 'ir' — 'él va' (he goes). Irregular verb.",
+      "example_contrast": "'voy' is for 'yo' (I go).",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "translation",
+      "content": {"question": "Translate to Spanish: \"I brush my teeth every morning.\""},
+      "correct_answer": "Me cepillo los dientes cada mañana.",
+      "rule_explanation": "Reflexive verb: 'cepillarse'. Daily routine vocabulary.",
+      "example_contrast": "",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "fill_blank",
+      "content": {"question": "Nosotros ___ la cena a las 7."},
+      "correct_answer": "comemos",
+      "rule_explanation": "'Nosotros comemos' — We eat. 1st person plural.",
+      "example_contrast": "",
+      "difficulty_level": 2
+    },
+    {
+      "task_type": "multiple_choice",
+      "content": {"question": "¿A qué hora te ___ a dormir?", "options": ["vas", "va", "voy", "vamos"]},
+      "correct_answer": "vas",
+      "rule_explanation": "'¿A qué hora te vas a dormir?' — What time do you go to sleep?",
+      "example_contrast": "'va' is for él/ella.",
+      "difficulty_level": 2
+    }
+  ]
+}
