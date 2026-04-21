@@ -20,7 +20,11 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.logoContainer}>
-          <Text style={styles.logo}>🌍</Text>
+          <Image 
+            source={require('../../assets/logo.png')} 
+            style={styles.logoImage} 
+            resizeMode="contain"
+          />
           <Text style={styles.appName}>PolyPath</Text>
         </View>
 
@@ -87,8 +91,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 48,
   },
-  logo: {
-    fontSize: 80,
+  logoImage: {
+    width: 120,
+    height: 120,
     marginBottom: 16,
   },
   appName: {
