@@ -29,6 +29,9 @@ from .views import (
     ModuleProgressView,
     GamificationProfileView,
     DailyCheckInView,
+    LeaderboardView,
+    FriendsLeaderboardView,
+    AchievementsListView,
 )
 
 app_name = 'learning'
@@ -62,5 +65,8 @@ urlpatterns = [
     path('progress/overview/', ProgressOverviewView.as_view(), name='progress-overview'),
     path('progress/modules/<int:pk>/', ModuleProgressView.as_view(), name='module-progress'),
     path('gamification/profile/', GamificationProfileView.as_view(), name='gamification-profile'),
+    path('gamification/leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
+    path('gamification/leaderboard/friends/', FriendsLeaderboardView.as_view(), name='leaderboard-friends'),
     path('gamification/daily-check-in/', DailyCheckInView.as_view(), name='daily-check-in'),
+    path('gamification/achievements/', AchievementsListView.as_view(), name='achievements'),
 ]

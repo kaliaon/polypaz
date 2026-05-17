@@ -105,11 +105,11 @@ export const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({
     try {
       const response = await taskService.submitTaskAttempt(task.template.id, answer);
       if (response.success && response.data) {
-        // Navigate to feedback screen
         navigation.navigate('TaskFeedback', {
           attempt: response.data.attempt,
           taskId: task.template.id,
           moduleId: moduleId,
+          newlyEarnedAchievements: response.data.newly_earned_achievements,
         });
       } else {
         showError('Failed to submit answer');

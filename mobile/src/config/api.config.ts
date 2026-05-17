@@ -5,8 +5,8 @@
 
 // Hardcoded for local network development
 // TODO: Set up proper environment variable loading
-export const API_BASE_URL = 'https://polypaz.onrender.com'
-// export const API_BASE_URL = 'http://192.168.0.65:8000';
+// export const API_BASE_URL = 'https://polypaz.onrender.com'
+export const API_BASE_URL = 'http://192.168.0.140:8000';
 
 export const API_ENDPOINTS = {
   // Auth endpoints
@@ -56,7 +56,19 @@ export const API_ENDPOINTS = {
     OVERVIEW: '/api/progress/overview/',
     MODULE: (moduleId: number) => `/api/progress/modules/${moduleId}/`,
     GAMIFICATION: '/api/gamification/profile/',
+    LEADERBOARD: '/api/gamification/leaderboard/',
+    LEADERBOARD_FRIENDS: '/api/gamification/leaderboard/friends/',
     DAILY_CHECKIN: '/api/gamification/daily-check-in/',
+    ACHIEVEMENTS: '/api/gamification/achievements/',
+  },
+
+  // Friends endpoints
+  FRIENDS: {
+    LIST: '/api/auth/friends/',
+    SEARCH: '/api/auth/friends/search/',
+    REQUEST: '/api/auth/friends/request/',
+    PENDING: '/api/auth/friends/pending/',
+    ACCEPT: (id: number) => `/api/auth/friends/${id}/accept/`,
   },
 };
 

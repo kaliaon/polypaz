@@ -85,6 +85,34 @@ class LearningTests(TestCase):
             is_active=True
         )
         
-        roadmap1.refresh_from_db()
         self.assertFalse(roadmap1.is_active)
         self.assertTrue(roadmap2.is_active)
+
+
+class GamificationTests(TestCase):
+    def setUp(self):
+        from rest_framework.test import APIClient
+        self.client = APIClient()
+        self.user1 = User.objects.create_user(username='player1', password='pw')
+        self.user2 = User.objects.create_user(username='player2', password='pw')
+        self.user3 = User.objects.create_user(username='player3', password='pw')
+        
+        from .models import GamificationProfile
+        GamificationProfile.objects.create(user=self.user1, total_xp=100)
+        GamificationProfile.objects.create(user=self.user2, total_xp=300)
+        GamificationProfile.objects.create(user=self.user3, total_xp=200)
+
+    def test_leaderboard_ordering(self):
+        """Test that leaderboard returns profiles sorted by XP."""
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get('/api/gamification/leaderboard/')
+        self.assertEqual(response.status_code, 200)
+        
+        results = response.data['results'] if 'results' in response.data else response.data
+        self.assertEqual(len(results), 3)
+        self.assertEqual(results[0]['username'], 'player2')
+        self.assertEqual(results[0]['total_xp'], 300)
+        self.assertEqual(results[1]['username'], 'player3')
+        self.assertEqual(results[1]['total_xp'], 200)
+        self.assertEqual(results[2]['username'], 'player1')
+        self.assertEqual(results[2]['total_xp'], 100)

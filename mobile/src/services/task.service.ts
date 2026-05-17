@@ -5,7 +5,7 @@
 
 import apiService from './api.service';
 import { API_ENDPOINTS } from '../config/api.config';
-import { TaskTemplate, TaskAttempt, ApiResponse } from '../types';
+import { TaskTemplate, TaskAttempt, ApiResponse, Achievement } from '../types';
 
 interface TaskInstance {
   id: number;
@@ -18,6 +18,7 @@ interface TaskInstance {
 interface SubmitTaskResponse {
   attempt: TaskAttempt;
   task_status: string;
+  newly_earned_achievements?: Achievement[];
 }
 
 class TaskService {

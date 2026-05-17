@@ -57,6 +57,13 @@ class UserProfile(models.Model):
         help_text="Current CEFR proficiency level"
     )
 
+    # Avatar (Emoji)
+    avatar = models.CharField(
+        max_length=5,
+        default='👤',
+        help_text="User's chosen emoji avatar"
+    )
+
     # Learning preferences (JSON field for flexibility)
     learning_preferences = models.JSONField(
         default=dict,
@@ -79,6 +86,35 @@ class UserProfile(models.Model):
     def get_display_level(self):
         """Get human-readable CEFR level"""
         return self.get_current_cefr_level_display()
+
+
+class Friendship(models.Model):
+    """
+    Friendship request between two users. When accepted=True the two users are
+    considered friends. The (from_user, to_user) pair is unique.
+    """
+
+    from_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='friendship_requests_sent'
+    )
+    to_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='friendship_requests_received'
+    )
+    accepted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('from_user', 'to_user')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        state = 'friends' if self.accepted else 'pending'
+        return f"{self.from_user.username} → {self.to_user.username} ({state})"
 
 
 @receiver(post_save, sender=User)

@@ -4,7 +4,8 @@ from .models import (
     Roadmap, Module,
     TaskTemplate, TaskInstance, TaskAttempt,
     DialogueScenario, DialogueSession, DialogueTurn,
-    ProgressSnapshot, GamificationProfile
+    ProgressSnapshot, GamificationProfile,
+    Achievement, UserAchievement,
 )
 
 
@@ -468,3 +469,20 @@ class GamificationProfileAdmin(admin.ModelAdmin):
         queryset.update(current_streak_days=0)
         self.message_user(request, f'{queryset.count()} profile(s) streaks reset.')
     reset_streaks.short_description = 'Reset current streaks'
+
+
+@admin.register(Achievement)
+class AchievementAdmin(admin.ModelAdmin):
+    list_display = ('icon', 'title', 'code', 'category', 'threshold', 'sort_order')
+    list_filter = ('category',)
+    search_fields = ('code', 'title', 'description')
+    ordering = ['sort_order', 'category', 'threshold']
+
+
+@admin.register(UserAchievement)
+class UserAchievementAdmin(admin.ModelAdmin):
+    list_display = ('user', 'achievement', 'earned_at')
+    list_filter = ('achievement__category', 'earned_at')
+    search_fields = ('user__username', 'achievement__code', 'achievement__title')
+    ordering = ['-earned_at']
+    readonly_fields = ('earned_at',)

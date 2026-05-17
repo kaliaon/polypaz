@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
-from .models import UserProfile
+from .models import UserProfile, Friendship
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -15,6 +15,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'native_language',
             'current_cefr_level',
             'learning_preferences',
+            'avatar',
             'created_at',
             'updated_at'
         ]
@@ -92,4 +93,38 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True, write_only=True) 
+    password = serializers.CharField(required=True, write_only=True)
+
+
+class FriendUserSerializer(serializers.ModelSerializer):
+    """Lightweight user representation for friend lists / search results."""
+    avatar = serializers.CharField(source='profile.avatar', default='👤', read_only=True)
+    cefr_level = serializers.CharField(source='profile.current_cefr_level', default='A0', read_only=True)
+    friendship_status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'avatar', 'cefr_level', 'friendship_status']
+
+    def get_friendship_status(self, obj):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated or request.user.id == obj.id:
+            return 'self' if request and request.user.id == obj.id else 'none'
+
+        me = request.user
+        outgoing = Friendship.objects.filter(from_user=me, to_user=obj).first()
+        if outgoing:
+            return 'friends' if outgoing.accepted else 'requested'
+        incoming = Friendship.objects.filter(from_user=obj, to_user=me).first()
+        if incoming:
+            return 'friends' if incoming.accepted else 'pending'
+        return 'none'
+
+
+class PendingFriendshipSerializer(serializers.ModelSerializer):
+    """A pending incoming friend request (waiting on the current user's accept)."""
+    from_user = FriendUserSerializer(read_only=True)
+
+    class Meta:
+        model = Friendship
+        fields = ['id', 'from_user', 'created_at']

@@ -21,7 +21,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
       <View style={styles.content}>
         <View style={styles.logoContainer}>
           <Image 
-            source={require('../../assets/logo.png')} 
+            source={require('../../../assets/logo.png')} 
             style={styles.logoImage} 
             resizeMode="contain"
           />

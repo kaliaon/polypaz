@@ -11,3 +11,5 @@ export { default as roadmapService } from './roadmap.service';
 export { default as taskService } from './task.service';
 export { default as dialogueService } from './dialogue.service';
 export { default as progressService } from './progress.service';
+export { default as translatorService } from './translator.service';
+export { default as friendsService } from './friends.service';

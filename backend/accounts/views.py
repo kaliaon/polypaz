@@ -1,11 +1,20 @@
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from .models import Friendship
+from .serializers import (
+    UserSerializer,
+    RegisterSerializer,
+    LoginSerializer,
+    FriendUserSerializer,
+    PendingFriendshipSerializer,
+)
 
 
 class RegisterView(generics.CreateAPIView):
@@ -110,6 +119,123 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
                 profile.native_language = profile_data['native_language']
             if 'learning_preferences' in profile_data:
                 profile.learning_preferences = profile_data['learning_preferences']
+            if 'avatar' in profile_data:
+                profile.avatar = profile_data['avatar']
             profile.save()
 
-        return Response(UserSerializer(user).data) 
+        return Response(UserSerializer(user).data)
+
+
+def _friend_user_ids(user):
+    """Return the set of user ids the given user is friends with (accepted)."""
+    qs = Friendship.objects.filter(accepted=True).filter(
+        Q(from_user=user) | Q(to_user=user)
+    )
+    ids = set()
+    for fr in qs:
+        ids.add(fr.to_user_id if fr.from_user_id == user.id else fr.from_user_id)
+    return ids
+
+
+class FriendSearchView(APIView):
+    """
+    GET /api/auth/friends/search/?q=<username>
+    Search users by username substring (case-insensitive). Excludes the
+    current user and is capped at 20 results.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        q = (request.query_params.get('q') or '').strip()
+        if not q:
+            return Response([], status=status.HTTP_200_OK)
+
+        users = (
+            User.objects
+            .filter(username__icontains=q)
+            .exclude(id=request.user.id)
+            .select_related('profile')[:20]
+        )
+        serializer = FriendUserSerializer(users, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class FriendRequestView(APIView):
+    """
+    POST /api/auth/friends/request/  body: {"user_id": <int>}
+    Send a friend request to another user. If the other user already sent
+    a pending request to you, accept it instead.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        target_id = request.data.get('user_id')
+        if not target_id:
+            return Response({"detail": "user_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+        if int(target_id) == request.user.id:
+            return Response({"detail": "Cannot add yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+        target = get_object_or_404(User, pk=target_id)
+
+        # If the target already requested us, accept their request
+        incoming = Friendship.objects.filter(from_user=target, to_user=request.user).first()
+        if incoming:
+            if not incoming.accepted:
+                incoming.accepted = True
+                incoming.save()
+            return Response({"status": "friends"}, status=status.HTTP_200_OK)
+
+        fr, created = Friendship.objects.get_or_create(
+            from_user=request.user,
+            to_user=target,
+        )
+        return Response(
+            {"status": "friends" if fr.accepted else "requested"},
+            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
+        )
+
+
+class FriendAcceptView(APIView):
+    """
+    POST /api/auth/friends/<int:pk>/accept/
+    Accept a pending friend request addressed to the current user.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        fr = get_object_or_404(Friendship, pk=pk, to_user=request.user)
+        if not fr.accepted:
+            fr.accepted = True
+            fr.save()
+        return Response({"status": "friends"})
+
+
+class FriendListView(APIView):
+    """
+    GET /api/auth/friends/
+    List the current user's accepted friends.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        friend_ids = _friend_user_ids(request.user)
+        friends = User.objects.filter(id__in=friend_ids).select_related('profile')
+        serializer = FriendUserSerializer(friends, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class FriendPendingView(APIView):
+    """
+    GET /api/auth/friends/pending/
+    List pending incoming friend requests for the current user.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        pending = (
+            Friendship.objects
+            .filter(to_user=request.user, accepted=False)
+            .select_related('from_user', 'from_user__profile')
+        )
+        serializer = PendingFriendshipSerializer(pending, many=True, context={'request': request})
+        return Response(serializer.data)

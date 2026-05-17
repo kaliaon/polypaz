@@ -78,7 +78,7 @@ export const ProgressOverviewScreen: React.FC = () => {
   };
 
   const getStreakMessage = () => {
-    const days = progress.current_streak_days;
+    const days = progress.gamification?.current_streak || 0;
     if (days === 0) return "Start your streak today! 🔥";
     if (days === 1) return "1 day streak! Keep it up! 🔥";
     return `${days} day streak! Amazing! 🔥`;
@@ -103,14 +103,14 @@ export const ProgressOverviewScreen: React.FC = () => {
             <View style={styles.statRow}>
               <StatCard
                 icon="⭐"
-                value={progress.total_xp || 0}
+                value={progress.gamification?.total_xp || 0}
                 label="Total XP"
                 color="#FF9800"
                 style={styles.statCardHalf}
               />
               <StatCard
                 icon="🔥"
-                value={progress.current_streak_days || 0}
+                value={progress.gamification?.current_streak || 0}
                 label="Day Streak"
                 color="#F44336"
                 style={styles.statCardHalf}
@@ -127,7 +127,7 @@ export const ProgressOverviewScreen: React.FC = () => {
               />
               <StatCard
                 icon="🎯"
-                value={`${Number(progress.overall_accuracy || 0).toFixed(0)}%`}
+                value={`${Number(progress.overall_progress?.average_accuracy || 0).toFixed(0)}%`}
                 label="Overall Accuracy"
                 color="#2196F3"
                 style={styles.statCardHalf}
@@ -136,13 +136,13 @@ export const ProgressOverviewScreen: React.FC = () => {
           </View>
         </View>
 
-        {progress.current_streak_days > 0 && (
+        {(progress.gamification?.current_streak || 0) > 0 && (
           <View style={styles.streakCard}>
             <Text style={styles.streakIcon}>🔥</Text>
             <View style={styles.streakContent}>
               <Text style={styles.streakTitle}>{getStreakMessage()}</Text>
               <Text style={styles.streakText}>
-                Your longest streak: {progress.longest_streak_days} days
+                Your longest streak: {progress.gamification?.longest_streak || 0} days
               </Text>
             </View>
           </View>
@@ -185,7 +185,7 @@ export const ProgressOverviewScreen: React.FC = () => {
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Average Accuracy:</Text>
               <Text style={styles.summaryValue}>
-                {Number(progress.overall_accuracy || 0).toFixed(1)}%
+                {Number(progress.overall_progress?.average_accuracy || 0).toFixed(1)}%
               </Text>
             </View>
           </View>

@@ -3,7 +3,7 @@
  * Displays feedback after submitting a task answer
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { HomeStackParamList } from '../../navigation/MainNavigator';
-import { Button } from '../../components';
+import { Button, AchievementUnlockedModal } from '../../components';
 import { TaskAttempt } from '../../types';
 
 type TaskFeedbackScreenNavigationProp = NativeStackNavigationProp<
@@ -33,7 +33,10 @@ export const TaskFeedbackScreen: React.FC<TaskFeedbackScreenProps> = ({
   navigation,
   route,
 }) => {
-  const { attempt, taskId, moduleId } = route.params;
+  const { attempt, taskId, moduleId, newlyEarnedAchievements } = route.params;
+  const [achievementsVisible, setAchievementsVisible] = useState(
+    !!(newlyEarnedAchievements && newlyEarnedAchievements.length > 0)
+  );
 
   const handleContinue = () => {
     // Navigate back to task list
@@ -146,6 +149,12 @@ export const TaskFeedbackScreen: React.FC<TaskFeedbackScreenProps> = ({
           variant="primary"
         />
       </View>
+
+      <AchievementUnlockedModal
+        achievements={newlyEarnedAchievements || []}
+        visible={achievementsVisible}
+        onClose={() => setAchievementsVisible(false)}
+      />
     </SafeAreaView>
   );
 };

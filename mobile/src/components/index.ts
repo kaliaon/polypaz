@@ -15,3 +15,4 @@ export { TaskCard } from './TaskCard';
 export { ScenarioCard } from './ScenarioCard';
 export { StatCard } from './StatCard';
 export { ModuleProgressCard } from './ModuleProgressCard';
+export { AchievementUnlockedModal } from './AchievementUnlockedModal';

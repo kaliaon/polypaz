@@ -14,7 +14,8 @@ from .models import (
     Roadmap, Module,
     TaskTemplate, TaskInstance, TaskAttempt,
     DialogueScenario, DialogueSession, DialogueTurn,
-    ProgressSnapshot, GamificationProfile
+    ProgressSnapshot, GamificationProfile,
+    Achievement, UserAchievement
 )
 from .serializers import (
     PlacementTestSerializer, PlacementTestSubmitSerializer, PlacementTestResultSerializer,
@@ -22,7 +23,8 @@ from .serializers import (
     TaskTemplateSerializer, TaskTemplateDetailSerializer, TaskInstanceSerializer,
     TaskAttemptSerializer, TaskAttemptSubmitSerializer,
     DialogueScenarioSerializer, DialogueSessionSerializer, DialogueTurnSerializer, DialogueMessageSerializer,
-    ProgressSnapshotSerializer, GamificationProfileSerializer
+    ProgressSnapshotSerializer, GamificationProfileSerializer, LeaderboardSerializer,
+    AchievementSerializer, UserAchievementSerializer
 )
 
 
@@ -467,11 +469,23 @@ class TaskAttemptView(APIView):
             # Update progress snapshot
             self._update_progress_snapshot(request.user, task_template.module)
 
-        # Return response wrapped in expected structure
+        # Collect achievements newly earned during this attempt (from XP and streak)
+        newly_earned = []
+        newly_earned.extend(getattr(attempt, 'newly_earned_achievements', []) or [])
+        newly_earned.extend(getattr(gamification_profile, 'newly_earned_achievements', []) or [])
+        # De-duplicate by code while preserving order
+        seen = set()
+        deduped = []
+        for a in newly_earned:
+            if a.code not in seen:
+                seen.add(a.code)
+                deduped.append(a)
+
         attempt_serializer = TaskAttemptSerializer(attempt)
         return Response({
             'attempt': attempt_serializer.data,
-            'task_status': task_instance.status
+            'task_status': task_instance.status,
+            'newly_earned_achievements': AchievementSerializer(deduped, many=True).data,
         }, status=status.HTTP_201_CREATED)
 
     def _evaluate_answer(self, user_answer: str, correct_answer: str, task_type: str) -> bool:
@@ -962,6 +976,10 @@ class DailyCheckInView(APIView):
 
         profile.save()
 
+        # Run achievement check after both streak and XP updates
+        from .models import check_and_award_achievements
+        newly_earned = check_and_award_achievements(user, profile)
+
         return Response({
             'message': 'Daily check-in successful',
             'xp_awarded': check_in_xp,
@@ -969,5 +987,88 @@ class DailyCheckInView(APIView):
             'longest_streak': profile.longest_streak_days,
             'total_xp': profile.total_xp,
             'last_active_date': profile.last_activity_date,
-            'streak_status': 'continued' if profile.current_streak_days > 1 else 'started'
+            'streak_status': 'continued' if profile.current_streak_days > 1 else 'started',
+            'newly_earned_achievements': AchievementSerializer(newly_earned, many=True).data,
         }, status=status.HTTP_200_OK)
+
+
+class LeaderboardView(generics.ListAPIView):
+    """
+    GET /api/gamification/leaderboard/
+    Get global leaderboard sorted by total XP
+    """
+    serializer_class = LeaderboardSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return GamificationProfile.objects.select_related('user', 'user__profile').order_by('-total_xp')[:50]
+
+
+class FriendsLeaderboardView(generics.ListAPIView):
+    """
+    GET /api/gamification/leaderboard/friends/
+    Leaderboard restricted to the current user's friends, plus the user
+    themselves, sorted by total XP.
+    """
+    serializer_class = LeaderboardSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        from django.db.models import Q
+        from accounts.models import Friendship
+
+        user = self.request.user
+        friendships = Friendship.objects.filter(accepted=True).filter(
+            Q(from_user=user) | Q(to_user=user)
+        )
+        friend_ids = set()
+        for fr in friendships:
+            friend_ids.add(fr.to_user_id if fr.from_user_id == user.id else fr.from_user_id)
+        friend_ids.add(user.id)
+
+        return (
+            GamificationProfile.objects
+            .filter(user_id__in=friend_ids)
+            .select_related('user', 'user__profile')
+            .order_by('-total_xp')
+        )
+
+
+class AchievementsListView(APIView):
+    """
+    GET /api/gamification/achievements/
+    Return the full achievement catalog with the current user's
+    earned/unearned state. Also re-runs the eligibility check so newly
+    qualifying badges (e.g. seeded later) are awarded on read.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        from .models import check_and_award_achievements
+        check_and_award_achievements(request.user)
+
+        earned = {
+            ua.achievement_id: ua.earned_at
+            for ua in UserAchievement.objects.filter(user=request.user)
+        }
+
+        achievements = Achievement.objects.all()
+        total = achievements.count()
+        items = []
+        for a in achievements:
+            items.append({
+                'code': a.code,
+                'title': a.title,
+                'description': a.description,
+                'icon': a.icon,
+                'category': a.category,
+                'threshold': a.threshold,
+                'is_earned': a.id in earned,
+                'earned_at': earned.get(a.id),
+            })
+
+        return Response({
+            'achievements': items,
+            'earned_count': len(earned),
+            'total_count': total,
+        })

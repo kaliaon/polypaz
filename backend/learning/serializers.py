@@ -5,7 +5,8 @@ from .models import (
     Roadmap, Module,
     TaskTemplate, TaskInstance, TaskAttempt,
     DialogueScenario, DialogueSession, DialogueTurn,
-    ProgressSnapshot, GamificationProfile
+    ProgressSnapshot, GamificationProfile,
+    Achievement, UserAchievement,
 )
 
 
@@ -264,13 +265,55 @@ class GamificationProfileSerializer(serializers.ModelSerializer):
     Serializer for GamificationProfile
     """
     username = serializers.CharField(source='user.username', read_only=True)
+    avatar = serializers.CharField(source='user.profile.avatar', default='👤', read_only=True)
 
     class Meta:
         model = GamificationProfile
         fields = [
-            'id', 'username', 'total_xp', 'current_streak_days',
+            'id', 'username', 'avatar', 'total_xp', 'current_streak_days',
             'longest_streak_days', 'last_activity_date',
             'xp_history', 'created_at', 'updated_at'
         ]
         read_only_fields = ['total_xp', 'current_streak_days', 'longest_streak_days',
                            'last_activity_date', 'xp_history', 'created_at', 'updated_at']
+
+
+class AchievementSerializer(serializers.ModelSerializer):
+    """Catalog entry for an achievement."""
+
+    class Meta:
+        model = Achievement
+        fields = ['code', 'title', 'description', 'icon', 'category', 'threshold']
+        read_only_fields = fields
+
+
+class UserAchievementSerializer(serializers.ModelSerializer):
+    """An achievement earned by a user."""
+    code = serializers.CharField(source='achievement.code', read_only=True)
+    title = serializers.CharField(source='achievement.title', read_only=True)
+    description = serializers.CharField(source='achievement.description', read_only=True)
+    icon = serializers.CharField(source='achievement.icon', read_only=True)
+    category = serializers.CharField(source='achievement.category', read_only=True)
+    threshold = serializers.IntegerField(source='achievement.threshold', read_only=True)
+
+    class Meta:
+        model = UserAchievement
+        fields = ['code', 'title', 'description', 'icon', 'category', 'threshold', 'earned_at']
+        read_only_fields = fields
+
+
+class LeaderboardSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Leaderboard (returns top GamificationProfile items)
+    """
+    username = serializers.CharField(source='user.username', read_only=True)
+    cefr_level = serializers.CharField(source='user.profile.current_cefr_level', default='A0', read_only=True)
+    avatar = serializers.CharField(source='user.profile.avatar', default='👤', read_only=True)
+
+    class Meta:
+        model = GamificationProfile
+        fields = [
+            'username', 'avatar', 'cefr_level', 'total_xp', 'current_streak_days',
+            'longest_streak_days', 'last_activity_date'
+        ]
+        read_only_fields = fields

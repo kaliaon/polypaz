@@ -15,9 +15,11 @@ import {
   DialogueChatScreen,
   DialogueCompletionScreen,
 } from '../screens/dialogue';
-import { ProgressOverviewScreen } from '../screens/progress';
+import { ProgressOverviewScreen, LeaderboardScreen } from '../screens/progress';
 import { ProfileScreen } from '../screens/profile';
-import { TaskAttempt, DialogueScenario, DialogueSession } from '../types';
+import { TranslatorScreen } from '../screens/translator';
+import { FriendsSearchScreen } from '../screens/friends';
+import { TaskAttempt, DialogueScenario, DialogueSession, Achievement } from '../types';
 
 export type HomeStackParamList = {
   Roadmap: undefined;
@@ -36,10 +38,8 @@ export type HomeStackParamList = {
     attempt: TaskAttempt;
     taskId: number;
     moduleId: number;
+    newlyEarnedAchievements?: Achievement[];
   };
-};
-
-export type DialogueStackParamList = {
   ScenarioSelection: undefined;
   ScenarioIntro: {
     scenario: DialogueScenario;
@@ -54,14 +54,20 @@ export type DialogueStackParamList = {
 
 export type MainTabParamList = {
   Home: undefined;
-  Dialogue: undefined;
+  Translator: undefined;
   Progress: undefined;
+  Leaderboard: undefined;
   Profile: undefined;
+};
+
+export type LeaderboardStackParamList = {
+  LeaderboardHome: undefined;
+  FriendsSearch: undefined;
 };
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
-const DialogueStack = createNativeStackNavigator<DialogueStackParamList>();
+const LeaderboardStack = createNativeStackNavigator<LeaderboardStackParamList>();
 
 // Home Stack Navigator with Roadmap, Module, and Task screens
 const HomeStackNavigator = () => {
@@ -108,23 +114,15 @@ const HomeStackNavigator = () => {
           headerLeft: () => null,
         }}
       />
-    </HomeStack.Navigator>
-  );
-};
-
-// Dialogue Stack Navigator with scenario and chat screens
-const DialogueStackNavigator = () => {
-  return (
-    <DialogueStack.Navigator>
-      <DialogueStack.Screen
+      <HomeStack.Screen
         name="ScenarioSelection"
         component={ScenarioSelectionScreen}
         options={{
           title: 'Dialogue Practice',
-          headerLargeTitle: true,
+          headerBackTitle: 'Back',
         }}
       />
-      <DialogueStack.Screen
+      <HomeStack.Screen
         name="ScenarioIntro"
         component={ScenarioIntroScreen}
         options={{
@@ -132,7 +130,7 @@ const DialogueStackNavigator = () => {
           headerBackTitle: 'Back',
         }}
       />
-      <DialogueStack.Screen
+      <HomeStack.Screen
         name="DialogueChat"
         component={DialogueChatScreen}
         options={{
@@ -141,7 +139,7 @@ const DialogueStackNavigator = () => {
           headerLeft: () => null,
         }}
       />
-      <DialogueStack.Screen
+      <HomeStack.Screen
         name="DialogueCompletion"
         component={DialogueCompletionScreen}
         options={{
@@ -150,12 +148,39 @@ const DialogueStackNavigator = () => {
           headerLeft: () => null,
         }}
       />
-    </DialogueStack.Navigator>
+    </HomeStack.Navigator>
   );
 };
 
 // Progress screen is a direct component (no stack needed for now)
 const ProgressScreen = ProgressOverviewScreen;
+
+const LeaderboardStackNavigator = () => {
+  return (
+    <LeaderboardStack.Navigator>
+      <LeaderboardStack.Screen
+        name="LeaderboardHome"
+        component={LeaderboardScreen}
+        options={({ navigation }) => ({
+          title: 'Leaderboard',
+          headerRight: () => (
+            <Text
+              onPress={() => navigation.navigate('FriendsSearch')}
+              style={{ fontSize: 22, marginRight: 12, color: '#2196F3' }}
+            >
+              ➕
+            </Text>
+          ),
+        })}
+      />
+      <LeaderboardStack.Screen
+        name="FriendsSearch"
+        component={FriendsSearchScreen}
+        options={{ title: 'Find Friends', headerBackTitle: 'Back' }}
+      />
+    </LeaderboardStack.Navigator>
+  );
+};
 
 export default function MainNavigator() {
   return (
@@ -187,13 +212,13 @@ export default function MainNavigator() {
         }}
       />
       <Tab.Screen
-        name="Dialogue"
-        component={DialogueStackNavigator}
+        name="Translator"
+        component={TranslatorScreen}
         options={{
-          title: 'Dialogue',
-          headerShown: false, // Hide tab header since stack has its own
+          title: 'Translate',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ fontSize: size, color }}>💬</Text>
+            <Text style={{ fontSize: size, color }}>🌐</Text>
           ),
         }}
       />
@@ -204,6 +229,17 @@ export default function MainNavigator() {
           title: 'Progress',
           tabBarIcon: ({ color, size }) => (
             <Text style={{ fontSize: size, color }}>📊</Text>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Leaderboard"
+        component={LeaderboardStackNavigator}
+        options={{
+          title: 'Leaderboard',
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Text style={{ fontSize: size, color }}>🏆</Text>
           ),
         }}
       />

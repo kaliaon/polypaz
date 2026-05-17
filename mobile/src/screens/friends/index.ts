@@ -1,0 +1,1 @@
+export { FriendsSearchScreen } from './FriendsSearchScreen';

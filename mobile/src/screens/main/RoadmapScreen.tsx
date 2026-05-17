@@ -10,6 +10,7 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -148,6 +149,21 @@ export const RoadmapScreen: React.FC<RoadmapScreenProps> = ({ navigation }) => {
           </View>
         </View>
 
+        <TouchableOpacity
+          style={styles.dialogueLink}
+          onPress={() => navigation.navigate('ScenarioSelection')}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.dialogueIcon}>💬</Text>
+          <View style={styles.dialogueText}>
+            <Text style={styles.dialogueTitle}>Dialogue Practice</Text>
+            <Text style={styles.dialogueSubtitle}>
+              Practice real conversations in {currentRoadmap.language}
+            </Text>
+          </View>
+          <Text style={styles.dialogueChevron}>›</Text>
+        </TouchableOpacity>
+
         <View style={styles.modulesContainer}>
           <Text style={styles.sectionTitle}>Your Learning Modules</Text>
           {currentRoadmap.modules.map((module, index) => (
@@ -229,6 +245,38 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 12,
     color: '#666',
+  },
+  dialogueLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  dialogueIcon: {
+    fontSize: 28,
+    marginRight: 14,
+  },
+  dialogueText: {
+    flex: 1,
+  },
+  dialogueTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#222',
+    marginBottom: 2,
+  },
+  dialogueSubtitle: {
+    fontSize: 13,
+    color: '#666',
+  },
+  dialogueChevron: {
+    fontSize: 22,
+    color: '#9AA3B2',
+    marginLeft: 8,
   },
   modulesContainer: {
     marginBottom: 24,

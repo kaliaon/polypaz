@@ -483,14 +483,12 @@ class TaskAttempt(models.Model):
 
         instance.save()
 
-        # Award XP to user's gamification profile
+        # Award XP to user's gamification profile (also runs achievement checks)
         if self.is_correct:
             from learning.models import GamificationProfile
-            profile, created = GamificationProfile.objects.get_or_create(
-                user=instance.user
-            )
-            profile.total_xp += self.xp_gained
-            profile.save()
+            profile, _ = GamificationProfile.objects.get_or_create(user=instance.user)
+            profile.add_xp(self.xp_gained)
+            self.newly_earned_achievements = getattr(profile, 'newly_earned_achievements', [])
 
 
 class DialogueScenario(models.Model):
@@ -783,6 +781,7 @@ class GamificationProfile(models.Model):
 
         self.last_activity_date = activity_date
         self.save()
+        self.newly_earned_achievements = check_and_award_achievements(self.user, self)
 
     def add_xp(self, xp_amount, date=None):
         """Add XP and update XP history"""
@@ -801,3 +800,89 @@ class GamificationProfile(models.Model):
             self.xp_history[date_str] = xp_amount
 
         self.save()
+        self.newly_earned_achievements = check_and_award_achievements(self.user, self)
+
+
+# ==================== Achievements ====================
+
+class Achievement(models.Model):
+    """
+    Catalog of milestone badges. Threshold-based on existing metrics
+    (total XP or longest streak).
+    """
+    CATEGORY_CHOICES = [
+        ('xp', 'Total XP'),
+        ('streak', 'Streak'),
+    ]
+
+    code = models.SlugField(
+        max_length=64,
+        unique=True,
+        help_text="Stable identifier, e.g. 'xp_500' or 'streak_7'"
+    )
+    title = models.CharField(max_length=80)
+    description = models.CharField(max_length=200)
+    icon = models.CharField(
+        max_length=8,
+        default='🏅',
+        help_text="Emoji shown on the badge"
+    )
+    category = models.CharField(max_length=16, choices=CATEGORY_CHOICES)
+    threshold = models.IntegerField(
+        help_text="Value required (XP for category=xp, days for category=streak)"
+    )
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Achievement'
+        verbose_name_plural = 'Achievements'
+        ordering = ['sort_order', 'category', 'threshold']
+
+    def __str__(self):
+        return f"{self.icon} {self.title}"
+
+
+class UserAchievement(models.Model):
+    """A badge earned by a specific user."""
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='achievements'
+    )
+    achievement = models.ForeignKey(
+        Achievement, on_delete=models.CASCADE, related_name='unlocks'
+    )
+    earned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'User Achievement'
+        verbose_name_plural = 'User Achievements'
+        unique_together = ['user', 'achievement']
+        ordering = ['-earned_at']
+
+    def __str__(self):
+        return f"{self.user.username} earned {self.achievement.code}"
+
+
+def check_and_award_achievements(user, profile=None):
+    """
+    Check all achievements against the user's current metrics and award
+    any newly earned ones. Returns the list of *newly* earned Achievement
+    objects from this call (does not include previously earned).
+    """
+    if profile is None:
+        profile, _ = GamificationProfile.objects.get_or_create(user=user)
+
+    already_earned_ids = set(
+        UserAchievement.objects.filter(user=user).values_list('achievement_id', flat=True)
+    )
+
+    newly_earned = []
+    for achievement in Achievement.objects.exclude(id__in=already_earned_ids):
+        qualifies = (
+            (achievement.category == 'xp' and profile.total_xp >= achievement.threshold)
+            or (achievement.category == 'streak' and profile.longest_streak_days >= achievement.threshold)
+        )
+        if qualifies:
+            UserAchievement.objects.get_or_create(user=user, achievement=achievement)
+            newly_earned.append(achievement)
+
+    return newly_earned

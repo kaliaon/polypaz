@@ -16,6 +16,7 @@ export interface ProfileData {
   target_language?: Language;
   native_language?: Language;
   current_cefr_level?: CEFRLevel;
+  avatar?: string;
   learning_preferences?: {
     goals?: string[];
     daily_time_minutes?: number;
@@ -121,6 +122,29 @@ export interface TaskAttempt {
   attempted_at: string;
 }
 
+// Achievements
+export type AchievementCategory = 'xp' | 'streak';
+
+export interface Achievement {
+  code: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: AchievementCategory;
+  threshold: number;
+}
+
+export interface AchievementStatus extends Achievement {
+  is_earned: boolean;
+  earned_at: string | null;
+}
+
+export interface AchievementsResponse {
+  achievements: AchievementStatus[];
+  earned_count: number;
+  total_count: number;
+}
+
 // Dialogue types
 export interface DialogueScenario {
   id: number;
@@ -165,11 +189,44 @@ export interface ModuleProgress {
 }
 
 export interface ProgressOverview {
+  roadmap: {
+    id: number;
+    language: string;
+    cefr_level: string;
+    created_at: string;
+  };
+  overall_progress: {
+    total_modules: number;
+    completed_modules: number;
+    total_tasks: number;
+    completed_tasks: number;
+    average_accuracy: number;
+  };
+  gamification: {
+    total_xp: number;
+    current_streak: number;
+    longest_streak: number;
+    last_active_date: string | null;
+    avatar?: string;
+  };
   modules: ModuleProgress[];
-  total_xp: number;
-  current_streak_days: number;
-  longest_streak_days: number;
-  overall_accuracy: number;
+}
+
+// Friends types
+export type FriendshipStatus = 'none' | 'requested' | 'pending' | 'friends' | 'self';
+
+export interface FriendUser {
+  id: number;
+  username: string;
+  avatar: string;
+  cefr_level: CEFRLevel;
+  friendship_status: FriendshipStatus;
+}
+
+export interface PendingFriendRequest {
+  id: number;
+  from_user: FriendUser;
+  created_at: string;
 }
 
 // API Response types
